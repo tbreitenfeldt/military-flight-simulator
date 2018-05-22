@@ -1,11 +1,21 @@
+/**
+ * Team 6
+ * CSCD340
+ * project part 1
+*/
+
 package acg.architecture.view.glyph.loader;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
+
+
 public class GlyphLoader {
     
-    private String fname;
+private String fname;
+
     private File file;
     
     public GlyphLoader (String filename) throws IOException {
@@ -90,9 +100,30 @@ public class GlyphLoader {
     }//end method
     
     private void readColor(Scanner lineScanner, EntryMap<EntryColor> colors, int lineNumber) throws InvalidLayoutException {
-        
         // A color entry: c, index, hex value = c, 1, #abcdef
+        int index = 0;
+        int rgb = 0;
+        String hex = "";
+        Color color = null;
+        
+        if ( !lineScanner.hasNextInt()) {
+            throw new InvalidLayoutException("Invalid index for color at line " + lineNumber, lineNumber);
+        }// if
 
+        index = lineScanner.nextInt();
+        hex = lineScanner.nextLine();
+        
+        //use a regular expression to insure the hex value is really hexidecimal
+        if ( !hex.matches("^[1-9a-fA-F]+$")) {
+            throw new InvalidLayoutException("Invalid hex value for color at line " + lineNumber, lineNumber);
+        }//end if
+        if (lineScanner.hasNextByte()) {
+            throw new InvalidLayoutException("Invalid sintax for color at line " + lineNumber, lineNumber);
+        }//end if
+        
+        color = Color.decode(hex);
+
+        colors.addEntry(new EntryColor(index, color));
     }//end method
     
     private void readVertex(Scanner lineScanner, EntryMap<EntryVertex> vertices, int lineNumber) throws InvalidLayoutException {
