@@ -63,6 +63,10 @@ public class GlyphLoader {
                 }
             }
             
+            //remove any white space from the beginning or end, and strip all trailling camas 
+            line = line.trim();
+            line = line.replaceAll(",*$", "");  //search the end of the line for 0 or more camas and replace with empty string
+            
             Scanner lineScanner = new Scanner(line);
             lineScanner.useDelimiter(",");
             char type;
@@ -105,8 +109,17 @@ public class GlyphLoader {
         return new LayoutBundle(edges.getEntries(true), circles.getEntries(true));
     }//end method
     
-    private void readColor(Scanner lineScanner, EntryMap<EntryColor> colors, int lineNumber) throws InvalidLayoutException {
-        // A color entry: c, index, hex value = c, 1, #abcdef
+    private void readColor(Scanner lineScanner, EntryMap<EntryColor> colors, int lineNumber) throws IllegalArgumentException, InvalidLayoutException {
+        if (lineScanner == null) {
+            throw new IllegalArgumentException("Scanner can not be null");
+        }//end if
+        if (colors == null) {
+            throw new IllegalArgumentException("EntryMap colors can not be null");
+        }//end if
+        if (lineNumber < 0) {
+            throw new IllegalArgumentException("Invalid line number. Line number " + lineNumber + " can not be less than 0");
+        }//end if
+
         int index = 0;
         int rgb = 0;
         String hex = "";
@@ -177,13 +190,14 @@ public class GlyphLoader {
             vertices.addEntry(new EntryVertex(index, x, y, z));
     }//end method
     
-    private void readEdge(Scanner lineScanner, EntryMap<EntryEdge> edges, EntryMap<EntryColor> colors, EntryMap<EntryVertex> vertices, int vIndexStart, int eIndex, int lineNumber) throws InvalidLayoutException {
+    private void readEdge(Scanner lineScanner, EntryMap<EntryEdge> edges, EntryMap<EntryColor> colors, EntryMap<EntryVertex> vertices, int vIndexStart, int eIndex,
+            int lineNumber) throws InvalidLayoutException {
         
         // An edge entry: e, start or end vertex, color index = e, 1, 2
     	
-    	EntryEdge edge;
-    	int vIndexEnd;
-    	int cIndex;
+        EntryEdge edge;
+        int vIndexEnd;
+        int cIndex;
         
         // Looking for vertex for end of edge
         if (lineScanner.hasNextInt()) {
@@ -209,11 +223,6 @@ public class GlyphLoader {
         
         // A circle entry: o, vertex index, color index, radius = o, 1, 2, 3.4
 
-    }//end method
-    
-    @Override
-    public String toString() {
-        return "";
     }//end method
 
 }//end class
