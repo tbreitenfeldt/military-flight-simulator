@@ -3,6 +3,7 @@ package acg.architecture.view.glyph.loader;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
+
 public class GlyphLoader {
     
     private String fname;
@@ -28,6 +29,8 @@ public class GlyphLoader {
         // Create file reader
         Scanner fin = new Scanner(file);
         int lineNumber = 0; // First line in file is 1
+        int vIndexStart = -1;// First Vertex starts as unknown
+        int eIndex = 0; // Edge Index
         
         if (fin == null) {
             throw new IOException("Scanner couldn't be created.");
@@ -60,6 +63,11 @@ public class GlyphLoader {
                 
                 type = lineScanner.next().charAt(0);
                 
+                if(type != 'e')
+                {
+                	vIndexStart = -1; //A blank line or end of file ends this list and starts a new one, if there are more entries
+                }
+                
                 if (type == 'c') {
                     readColor(lineScanner, colors, lineNumber);
                 
@@ -67,7 +75,7 @@ public class GlyphLoader {
                     readVertex(lineScanner, vertices, lineNumber);
                 
                 } else if (type == 'e') {
-                    readEdge(lineScanner, edges, lineNumber);
+                    readEdge(lineScanner, edges, colors, vertices, vIndexStart, eIndex, lineNumber);
                 
                 } else if (type == 'o') {
                     readCircle(lineScanner, circles, lineNumber);
@@ -140,10 +148,32 @@ public class GlyphLoader {
             vertices.addEntry(new EntryVertex(index, x, y, z));
     }//end method
     
-    private void readEdge(Scanner lineScanner, EntryMap<EntryEdge> edges, int lineNumber) throws InvalidLayoutException {
+    private void readEdge(Scanner lineScanner, EntryMap<EntryEdge> edges, EntryMap<EntryColor> colors, EntryMap<EntryVertex> vertices, int vIndexStart, int eIndex, int lineNumber) throws InvalidLayoutException {
         
         // An edge entry: e, start or end vertex, color index = e, 1, 2
+    	
+    	EntryEdge edge;
+    	int vIndexEnd;
+    	int cIndex;
         
+        // Looking for vertex for end of edge
+        if (lineScanner.hasNextInt()) {
+            
+            vIndexEnd = Integer.parseInt(lineScanner.next());
+            
+            if (lineScanner.hasNextInt()) {
+                
+                cIndex = Integer.parseInt(lineScanner.next());
+                
+                if(vIndexStart >= 0) { //Checks if is the first vertex
+                	 edge = new EntryEdge(eIndex, vertices.getEntry(vIndexStart),vertices.getEntry(vIndexEnd),colors.getEntry(cIndex));
+                	 edges.addEntry(edge);//Adds edge
+                	 eIndex = eIndex + 1;//Increments the index
+                } 
+                vIndexStart = vIndexEnd; // Sets the beginning of the next edge from the end of the last.
+            }
+        }
+            
     }//end method
     
     private void readCircle(Scanner lineScanner, EntryMap<EntryCircle> circles, int lineNumber) throws InvalidLayoutException {
