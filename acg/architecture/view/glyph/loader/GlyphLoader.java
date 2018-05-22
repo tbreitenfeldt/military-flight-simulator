@@ -14,8 +14,7 @@ import java.util.Scanner;
 
 public class GlyphLoader {
     
-private String fname;
-
+    private String fname;
     private File file;
     
     public GlyphLoader (String filename) throws IOException {
