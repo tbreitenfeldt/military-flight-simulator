@@ -2,21 +2,20 @@ package acg.architecture.view.glyph.loader;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
-
+import java.util.Scanner;
 public class GlyphLoader {
     
-    String fname;
-    File file;
+    private String fname;
+    private File file;
     
     public GlyphLoader (String filename) throws IOException {
         
-        fname = filename;
-        file = new File (filename);
+        this.fname = filename;
+        this.file = new File (filename);
         
         if (!file.exists())
             throw new IOException("The file does not exist.");
-    }
+    }//end constructor
 
     public LayoutBundle load() throws IOException, InvalidLayoutException {   
         
@@ -30,8 +29,9 @@ public class GlyphLoader {
         Scanner fin = new Scanner(file);
         int lineNumber = 0; // First line in file is 1
         
-        if (fin == null)
+        if (fin == null) {
             throw new IOException("Scanner couldn't be created.");
+        }
         
         while (fin.hasNext()) {
             
@@ -44,10 +44,10 @@ public class GlyphLoader {
             
             if (line.contains(";")) {
                 
-                if (line.charAt(0) == ';')
+                if (line.charAt(0) == ';') {
                     line = "";
                 
-                else {
+                } else {
                     line = line.substring(0, line.indexOf(";"));
                 }
             }
@@ -60,41 +60,40 @@ public class GlyphLoader {
                 
                 type = lineScanner.next().charAt(0);
                 
-                if (type == 'c')
+                if (type == 'c') {
                     readColor(lineScanner, colors, lineNumber);
                 
-                else if (type == 'v')
+                } else if (type == 'v') {
                     readVertex(lineScanner, vertices, lineNumber);
                 
-                else if (type == 'e')
+                } else if (type == 'e') {
                     readEdge(lineScanner, edges, lineNumber);
                 
-                else if (type == 'o')
+                } else if (type == 'o') {
                     readCircle(lineScanner, circles, lineNumber);
-                
-            }
-
-            else {
+                }
+            
+            } else {
                 
                 lineScanner.close();
                 throw new InvalidLayoutException("Entry not type c, v, e, or o.  Line No.:" + lineNumber, lineNumber);
             }
-               
             
             lineScanner.close();
-        }
+        }//end while loop
         
         fin.close();
         
-        // Create the LayoutBundle and return
-        return new LayoutBundle(edges, circles);
-    }
+        // Create the LayoutBundle by getting the entries from the EntryMaps and return
+        //getEntries takes a boolean to sort or not, and cast to correct List type to remove warning
+        return new LayoutBundle(edges.getEntries(true), circles.getEntries(true));
+    }//end method
     
     private void readColor(Scanner lineScanner, EntryMap<EntryColor> colors, int lineNumber) throws InvalidLayoutException {
         
         // A color entry: c, index, hex value = c, 1, #abcdef
 
-    }
+    }//end method
     
     private void readVertex(Scanner lineScanner, EntryMap<EntryVertex> vertices, int lineNumber) throws InvalidLayoutException {
         
@@ -139,17 +138,23 @@ public class GlyphLoader {
         
         if (success)
             vertices.addEntry(new EntryVertex(index, x, y, z));
-    }
+    }//end method
     
     private void readEdge(Scanner lineScanner, EntryMap<EntryEdge> edges, int lineNumber) throws InvalidLayoutException {
         
         // An edge entry: e, start or end vertex, color index = e, 1, 2
         
-    }
+    }//end method
     
     private void readCircle(Scanner lineScanner, EntryMap<EntryCircle> circles, int lineNumber) throws InvalidLayoutException {
         
         // A circle entry: o, vertex index, color index, radius = o, 1, 2, 3.4
 
-    }
-}
+    }//end method
+    
+    @Override
+    public String toString() {
+        return "";
+    }//end method
+
+}//end class
