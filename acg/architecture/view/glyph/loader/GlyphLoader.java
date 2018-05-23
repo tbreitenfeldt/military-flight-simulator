@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.*;
 
 
 public class GlyphLoader {
@@ -19,8 +20,8 @@ public class GlyphLoader {
     
     private EntryMap<EntryColor> colors;
     private EntryMap<EntryVertex> vertices;
-    private ArrayList<ArrayList<EntryEdge>> edges;
-    private ArrayList<EntryCircle> circles;
+    private List<List<EntryEdge>> edges;
+    private List<EntryCircle> circles;
     
     public GlyphLoader (String filename) throws IOException {
         
