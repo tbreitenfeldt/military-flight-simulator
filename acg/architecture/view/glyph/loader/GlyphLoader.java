@@ -20,8 +20,8 @@ public class GlyphLoader {
     
     private EntryMap<EntryColor> colors;
     private EntryMap<EntryVertex> vertices;
-    private List<List<EntryEdge>> edges;
-    private List<EntryCircle> circles;
+    private List edges;
+    private List circles;
     
     public GlyphLoader (String filename) throws IOException {
         
