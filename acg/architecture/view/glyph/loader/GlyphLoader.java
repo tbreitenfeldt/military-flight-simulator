@@ -77,7 +77,7 @@ public class GlyphLoader {
                 
                 if(type != 'e')
                 {
-                	vIndexStart = -1; //A blank line or end of file ends this list and starts a new one, if there are more entries
+                    vIndexStart = -1; //A blank line or end of file ends this list and starts a new one, if there are more entries
                 }
                 
                 if (type == 'c') {
@@ -130,13 +130,13 @@ public class GlyphLoader {
         }// if
 
         index = lineScanner.nextInt();
-        hex = lineScanner.nextLine();
+        hex = lineScanner.next();
         
         //use a regular expression to insure the hex value is really hexidecimal
-        if ( !hex.matches("^[1-9a-fA-F]+$")) {
+        if ( !hex.matches("^#[0-9a-fA-F]+$")) {
             throw new InvalidLayoutException("Invalid hex value for color at line " + lineNumber, lineNumber);
         }//end if
-        if (lineScanner.hasNextByte()) {
+        if (lineScanner.hasNext()) {
             throw new InvalidLayoutException("Invalid sintax for color at line " + lineNumber, lineNumber);
         }//end if
         
@@ -194,7 +194,7 @@ public class GlyphLoader {
             int lineNumber) throws InvalidLayoutException {
         
         // An edge entry: e, start or end vertex, color index = e, 1, 2
-    	
+        
         EntryEdge edge;
         int vIndexEnd;
         int cIndex;
@@ -209,9 +209,9 @@ public class GlyphLoader {
                 cIndex = Integer.parseInt(lineScanner.next());
                 
                 if(vIndexStart >= 0) { //Checks if is the first vertex
-                	 edge = new EntryEdge(eIndex, vertices.getEntry(vIndexStart),vertices.getEntry(vIndexEnd),colors.getEntry(cIndex));
-                	 edges.addEntry(edge);//Adds edge
-                	 eIndex = eIndex + 1;//Increments the index
+                     edge = new EntryEdge(eIndex, vertices.getEntry(vIndexStart),vertices.getEntry(vIndexEnd),colors.getEntry(cIndex));
+                     edges.addEntry(edge);//Adds edge
+                     eIndex = eIndex + 1;//Increments the index
                 } 
                 vIndexStart = vIndexEnd; // Sets the beginning of the next edge from the end of the last.
             }
