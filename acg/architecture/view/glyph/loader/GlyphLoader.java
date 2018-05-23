@@ -109,17 +109,7 @@ public class GlyphLoader {
         return new LayoutBundle(edges.getEntries(true), circles.getEntries(true));
     }//end method
     
-    private void readColor(Scanner lineScanner, EntryMap<EntryColor> colors, int lineNumber) throws IllegalArgumentException, InvalidLayoutException {
-        if (lineScanner == null) {
-            throw new IllegalArgumentException("Scanner can not be null");
-        }//end if
-        if (colors == null) {
-            throw new IllegalArgumentException("EntryMap colors can not be null");
-        }//end if
-        if (lineNumber < 0) {
-            throw new IllegalArgumentException("Invalid line number. Line number " + lineNumber + " can not be less than 0");
-        }//end if
-
+    private void readColor(Scanner lineScanner, EntryMap<EntryColor> colors, int lineNumber) throws InvalidLayoutException {
         int index = 0;
         int rgb = 0;
         String hex = "";
