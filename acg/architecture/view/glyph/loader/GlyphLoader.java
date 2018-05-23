@@ -17,6 +17,11 @@ public class GlyphLoader {
     private String fname;
     private File file;
     
+    private EntryMap<EntryColor> colors;
+    private EntryMap<EntryVertex> vertices;
+    private ArrayList<ArrayList<EntryEdge>> edges;
+    private ArrayList<EntryCircle> circles;
+    
     public GlyphLoader (String filename) throws IOException {
         
         this.fname = filename;
@@ -24,15 +29,17 @@ public class GlyphLoader {
         
         if (!file.exists())
             throw new IOException("The file does not exist.");
+        
+        
+        colors = new EntryMap<EntryColor>();
+        vertices = new EntryMap<EntryVertex>();
+        edges = new ArrayList<ArrayList<EntryEdge>>();
+        circles = new ArrayList<EntryCircle>();
+        
+        
     }//end constructor
 
     public LayoutBundle load() throws IOException, InvalidLayoutException {   
-        
-        // Create color, vertex, edge, and circle lists
-        EntryMap colors = new EntryMap<EntryColor>();
-        EntryMap vertices = new EntryMap<EntryVertex>();
-        EntryMap edges = new EntryMap<EntryEdge>();
-        EntryMap circles = new EntryMap<EntryCircle>();
         
         // Create file reader
         Scanner fin = new Scanner(file);
@@ -81,16 +88,16 @@ public class GlyphLoader {
                 }
                 
                 if (type == 'c') {
-                    readColor(lineScanner, colors, lineNumber);
+                    readColor(lineScanner, lineNumber);
                 
                 } else if (type == 'v') {
-                    readVertex(lineScanner, vertices, lineNumber);
+                    readVertex(lineScanner, lineNumber);
                 
                 } else if (type == 'e') {
-                    readEdge(lineScanner, edges, colors, vertices, vIndexStart, eIndex, lineNumber);
+                    readEdge(lineScanner, vIndexStart, eIndex, lineNumber);
                 
                 } else if (type == 'o') {
-                    readCircle(lineScanner, circles, lineNumber);
+                    readCircle(lineScanner, lineNumber);
                 }
             
             } else {
@@ -106,10 +113,20 @@ public class GlyphLoader {
         
         // Create the LayoutBundle by getting the entries from the EntryMaps and return
         //getEntries takes a boolean to sort or not, and cast to correct List type to remove warning
-        return new LayoutBundle(edges.getEntries(true), circles.getEntries(true));
+        return new LayoutBundle(this.edges, this.circles);
     }//end method
     
-    private void readColor(Scanner lineScanner, EntryMap<EntryColor> colors, int lineNumber) throws InvalidLayoutException {
+    private void readColor(Scanner lineScanner, int lineNumber) throws IllegalArgumentException, InvalidLayoutException {
+        if (lineScanner == null) {
+            throw new IllegalArgumentException("Scanner can not be null");
+        }//end if
+        if (this.colors == null) {
+            throw new IllegalArgumentException("Colors can not be null");
+        }//end if
+        if (lineNumber < 0) {
+            throw new IllegalArgumentException("Invalid line number. Line number " + lineNumber + " can not be less than 0");
+        }//end if
+
         int index = 0;
         int rgb = 0;
         String hex = "";
@@ -132,10 +149,10 @@ public class GlyphLoader {
         
         color = Color.decode(hex);
 
-        colors.addEntry(new EntryColor(index, color));
+        this.colors.add(new EntryColor(index, color));
     }//end method
     
-    private void readVertex(Scanner lineScanner, EntryMap<EntryVertex> vertices, int lineNumber) throws InvalidLayoutException {
+    private void readVertex(Scanner lineScanner, int lineNumber) throws InvalidLayoutException {
         
         // A vertex entry: v, index, x, y, z = v, 1, 2.3, 1.1, -2
         int index;
@@ -180,11 +197,11 @@ public class GlyphLoader {
             vertices.addEntry(new EntryVertex(index, x, y, z));
     }//end method
     
-    private void readEdge(Scanner lineScanner, EntryMap<EntryEdge> edges, EntryMap<EntryColor> colors, EntryMap<EntryVertex> vertices, int vIndexStart, int eIndex,
+    private void readEdge(Scanner lineScanner, int vIndexStart, int eIndex,
             int lineNumber) throws InvalidLayoutException {
         
         // An edge entry: e, start or end vertex, color index = e, 1, 2
-        
+        /*
         EntryEdge edge;
         int vIndexEnd;
         int cIndex;
@@ -200,19 +217,40 @@ public class GlyphLoader {
                 
                 if(vIndexStart >= 0) { //Checks if is the first vertex
                      edge = new EntryEdge(eIndex, vertices.getEntry(vIndexStart),vertices.getEntry(vIndexEnd),colors.getEntry(cIndex));
-                     edges.addEntry(edge);//Adds edge
+                     this.edges.add(edge);//Adds edge
                      eIndex = eIndex + 1;//Increments the index
                 } 
                 vIndexStart = vIndexEnd; // Sets the beginning of the next edge from the end of the last.
             }
         }
+        */
             
     }//end method
     
-    private void readCircle(Scanner lineScanner, EntryMap<EntryCircle> circles, int lineNumber) throws InvalidLayoutException {
+    private void readCircle(Scanner lineScanner, int lineNumber) throws InvalidLayoutException {
         
         // A circle entry: o, vertex index, color index, radius = o, 1, 2, 3.4
 
+        
+        
     }//end method
+    
+    @Override
+    public String toString() {
+        
+        String msg = "";
+        
+        msg += "----- GlyphLoader toString -----\n";
+        msg += "Colors:\n";
+        msg += this.colors.toString() + "\n";
+        msg += "Vertices:\n";
+        msg += this.vertices.toString() + "\n";
+        msg += "Edges:\n";
+        msg += this.edges.toString() + "\n";
+        msg += "Circles:\n";
+        msg += this.circles.toString() + "\n";
+        
+        return msg;
+    }
 
 }//end class
