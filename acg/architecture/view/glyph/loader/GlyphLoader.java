@@ -10,17 +10,18 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
 
 
 public class GlyphLoader {
     
     private String fname;
     private File file;
-    
     private EntryMap<EntryColor> colors;
     private EntryMap<EntryVertex> vertices;
-    private ArrayList<ArrayList<EntryEdge>> edges;
-    private ArrayList<EntryCircle> circles;
+    private List edges;
+    private List circles;
     
     public GlyphLoader (String filename) throws IOException {
         
@@ -111,22 +112,10 @@ public class GlyphLoader {
         
         fin.close();
         
-        // Create the LayoutBundle by getting the entries from the EntryMaps and return
-        //getEntries takes a boolean to sort or not, and cast to correct List type to remove warning
         return new LayoutBundle(this.edges, this.circles);
     }//end method
     
-    private void readColor(Scanner lineScanner, int lineNumber) throws IllegalArgumentException, InvalidLayoutException {
-        if (lineScanner == null) {
-            throw new IllegalArgumentException("Scanner can not be null");
-        }//end if
-        if (this.colors == null) {
-            throw new IllegalArgumentException("Colors can not be null");
-        }//end if
-        if (lineNumber < 0) {
-            throw new IllegalArgumentException("Invalid line number. Line number " + lineNumber + " can not be less than 0");
-        }//end if
-
+    private void readColor(Scanner lineScanner, int lineNumber) throws InvalidLayoutException {
         int index = 0;
         int rgb = 0;
         String hex = "";
@@ -149,7 +138,7 @@ public class GlyphLoader {
         
         color = Color.decode(hex);
 
-        this.colors.add(new EntryColor(index, color));
+        this.colors.addEntry(new EntryColor(index, color));
     }//end method
     
     private void readVertex(Scanner lineScanner, int lineNumber) throws InvalidLayoutException {
@@ -197,8 +186,7 @@ public class GlyphLoader {
             vertices.addEntry(new EntryVertex(index, x, y, z));
     }//end method
     
-    private void readEdge(Scanner lineScanner, int vIndexStart, int eIndex,
-            int lineNumber) throws InvalidLayoutException {
+    private void readEdge(Scanner lineScanner, int vIndexStart, int eIndex, int lineNumber) throws InvalidLayoutException {
         
         // An edge entry: e, start or end vertex, color index = e, 1, 2
         /*
@@ -251,6 +239,6 @@ public class GlyphLoader {
         msg += this.circles.toString() + "\n";
         
         return msg;
-    }
+    }//end method
 
 }//end class
