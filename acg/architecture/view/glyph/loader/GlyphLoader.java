@@ -101,11 +101,7 @@ public class GlyphLoader {
                     readCircle(lineScanner, lineNumber);
                 }
             
-            } else {
-                
-                lineScanner.close();
-                throw new InvalidLayoutException("Entry not type c, v, e, or o.  Line No.:" + lineNumber, lineNumber);
-            }
+            } 
             
             lineScanner.close();
         }//end while loop
