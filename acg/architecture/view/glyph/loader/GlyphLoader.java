@@ -47,6 +47,7 @@ public class GlyphLoader {
         int lineNumber = 0; // First line in file is 1
         int vIndexStart = -1;// First Vertex starts as unknown
         int eIndex = 0; // Edge Index
+        int oIndex = 0; // Circle Index
         ArrayList<EntryEdge> elist = null;
         
         if (fin == null) {
@@ -73,26 +74,27 @@ public class GlyphLoader {
             }
             
             //remove any white space from the beginning or end, and strip all trailling camas 
-            line = line.trim();
-            line = line.replaceAll(",*$", "");  //search the end of the line for 0 or more camas and replace with empty string
+            line = line.replaceAll("(,| )*$", "");  //search the end of the line for 0 or more camas and replace with empty string
             
             Scanner lineScanner = new Scanner(line);
             lineScanner.useDelimiter(",");
             char type;
             
+            //Handles blank line that ends a list of edges
+            if(line.equals(""))
+            {
+            	if(elist != null)
+            	{
+            		edges.add(elist);
+            	}
+                vIndexStart = -1; //A blank line or end of file ends this list and starts a new one, if there are more entries
+                elist = null; //
+            }
+            
             if (lineScanner.hasNext()) {
                 
                 type = lineScanner.next().charAt(0);
                 
-                if(type != 'e')
-                {
-                	if(elist != null)
-                	{
-                		edges.add(elist);
-                	}
-                    vIndexStart = -1; //A blank line or end of file ends this list and starts a new one, if there are more entries
-                    elist = null; //
-                }
                 
                 if (type == 'c') {
                     readColor(lineScanner, lineNumber);
@@ -108,7 +110,7 @@ public class GlyphLoader {
                     readEdge(lineScanner, vIndexStart, elist, eIndex, lineNumber);
                 
                 } else if (type == 'o') {
-                    readCircle(lineScanner, lineNumber);
+                    readCircle(lineScanner, oIndex, lineNumber);
                 }
             
             } 
@@ -221,9 +223,31 @@ public class GlyphLoader {
             
     }//end method
     
-    private void readCircle(Scanner lineScanner, int lineNumber) throws InvalidLayoutException {
+    private void readCircle(Scanner lineScanner, int oIndex, int lineNumber) throws InvalidLayoutException {
         
         // A circle entry: o, vertex index, color index, radius = o, 1, 2, 3.4
+    	EntryCircle circle;
+    	int vIndex;
+    	int cIndex;
+    	double radius;
+    	
+    	if(lineScanner.hasNextInt()) {
+    		vIndex = Integer.parseInt(lineScanner.next());
+    		
+    		if(lineScanner.hasNextInt()) {
+    			cIndex = Integer.parseInt(LineScanner.next());
+    			
+    			if(lineScanner.hasNextDouble()) {
+    				radius = Double.parseDouble(LineScanner.next());
+    				
+    				circle = new EntryCircle(oIndex, vertices.getEntry(vIndex), raduis, colors.getEntry(cIndex));
+    				this.circles.add(circle); // adds circle to list of circles
+    				oIndex = oIndex + 1; // Increments the index
+    						
+    			}
+    		}
+    	}
+    	
 
         
         
