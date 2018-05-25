@@ -47,6 +47,7 @@ public class GlyphLoader {
         int lineNumber = 0; // First line in file is 1
         int vIndexStart = -1;// First Vertex starts as unknown
         int eIndex = 0; // Edge Index
+        ArrayList<EntryEdge> elist = null;
         
         if (fin == null) {
             throw new IOException("Scanner couldn't be created.");
@@ -85,7 +86,12 @@ public class GlyphLoader {
                 
                 if(type != 'e')
                 {
+                	if(elist != null)
+                	{
+                		edges.add(elist);
+                	}
                     vIndexStart = -1; //A blank line or end of file ends this list and starts a new one, if there are more entries
+                    elist = null; //
                 }
                 
                 if (type == 'c') {
@@ -95,7 +101,11 @@ public class GlyphLoader {
                     readVertex(lineScanner, lineNumber);
                 
                 } else if (type == 'e') {
-                    readEdge(lineScanner, vIndexStart, eIndex, lineNumber);
+                	if(elist == null)
+                	{
+                		elist = new ArrayList<EdgeEntry>();
+                	}
+                    readEdge(lineScanner, vIndexStart, elist, eIndex, lineNumber);
                 
                 } else if (type == 'o') {
                     readCircle(lineScanner, lineNumber);
@@ -182,10 +192,10 @@ public class GlyphLoader {
             vertices.addEntry(new EntryVertex(index, x, y, z));
     }//end method
     
-    private void readEdge(Scanner lineScanner, int vIndexStart, int eIndex, int lineNumber) throws InvalidLayoutException {
+    private void readEdge(Scanner lineScanner, int vIndexStart, ArrayList<EntryEdge> elist, int eIndex, int lineNumber) throws InvalidLayoutException {
         
         // An edge entry: e, start or end vertex, color index = e, 1, 2
-        /*
+        
         EntryEdge edge;
         int vIndexEnd;
         int cIndex;
@@ -201,13 +211,13 @@ public class GlyphLoader {
                 
                 if(vIndexStart >= 0) { //Checks if is the first vertex
                      edge = new EntryEdge(eIndex, vertices.getEntry(vIndexStart),vertices.getEntry(vIndexEnd),colors.getEntry(cIndex));
-                     this.edges.add(edge);//Adds edge
+                     this.elist.add(edge);//Adds edge to current edge list
                      eIndex = eIndex + 1;//Increments the index
                 } 
                 vIndexStart = vIndexEnd; // Sets the beginning of the next edge from the end of the last.
             }
         }
-        */
+        
             
     }//end method
     
