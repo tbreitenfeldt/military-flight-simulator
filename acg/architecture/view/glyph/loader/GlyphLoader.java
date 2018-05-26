@@ -72,9 +72,9 @@ public class GlyphLoader {
                     line = line.substring(0, line.indexOf(";"));
                 }
             }
-            
-            //remove any white space from the beginning or end, and strip all trailling camas 
-            line = line.replaceAll("(,| )*$", "");  //search the end of the line for 0 or more camas and replace with empty string
+
+            //search the end of the line for 0 or more camas or spaces and replace with empty string            
+            line = line.replaceAll("(,| )*$", "");
             
             Scanner lineScanner = new Scanner(line);
             lineScanner.useDelimiter(",");
@@ -83,10 +83,10 @@ public class GlyphLoader {
             //Handles blank line that ends a list of edges
             if(line.equals(""))
             {
-            	if(elist != null)
-            	{
-            		edges.add(elist);
-            	}
+                if(elist != null)
+                {
+                    edges.add(elist);
+                }
                 vIndexStart = -1; //A blank line or end of file ends this list and starts a new one, if there are more entries
                 elist = null; //
             }
@@ -103,10 +103,10 @@ public class GlyphLoader {
                     readVertex(lineScanner, lineNumber);
                 
                 } else if (type == 'e') {
-                	if(elist == null)
-                	{
-                		elist = new ArrayList<EdgeEntry>();
-                	}
+                    if(elist == null)
+                    {
+                        elist = new ArrayList<EntryEdge>();
+                    }
                     readEdge(lineScanner, vIndexStart, elist, eIndex, lineNumber);
                 
                 } else if (type == 'o') {
@@ -213,7 +213,7 @@ public class GlyphLoader {
                 
                 if(vIndexStart >= 0) { //Checks if is the first vertex
                      edge = new EntryEdge(eIndex, vertices.getEntry(vIndexStart),vertices.getEntry(vIndexEnd),colors.getEntry(cIndex));
-                     this.elist.add(edge);//Adds edge to current edge list
+                     elist.add(edge);//Adds edge to current edge list
                      eIndex = eIndex + 1;//Increments the index
                 } 
                 vIndexStart = vIndexEnd; // Sets the beginning of the next edge from the end of the last.
@@ -226,28 +226,28 @@ public class GlyphLoader {
     private void readCircle(Scanner lineScanner, int oIndex, int lineNumber) throws InvalidLayoutException {
         
         // A circle entry: o, vertex index, color index, radius = o, 1, 2, 3.4
-    	EntryCircle circle;
-    	int vIndex;
-    	int cIndex;
-    	double radius;
-    	
-    	if(lineScanner.hasNextInt()) {
-    		vIndex = Integer.parseInt(lineScanner.next());
-    		
-    		if(lineScanner.hasNextInt()) {
-    			cIndex = Integer.parseInt(LineScanner.next());
-    			
-    			if(lineScanner.hasNextDouble()) {
-    				radius = Double.parseDouble(LineScanner.next());
-    				
-    				circle = new EntryCircle(oIndex, vertices.getEntry(vIndex), raduis, colors.getEntry(cIndex));
-    				this.circles.add(circle); // adds circle to list of circles
-    				oIndex = oIndex + 1; // Increments the index
-    						
-    			}
-    		}
-    	}
-    	
+        EntryCircle circle;
+        int vIndex;
+        int cIndex;
+        double radius;
+        
+        if(lineScanner.hasNextInt()) {
+            vIndex = Integer.parseInt(lineScanner.next());
+            
+            if(lineScanner.hasNextInt()) {
+                cIndex = Integer.parseInt(lineScanner.next());
+                
+                if(lineScanner.hasNextDouble()) {
+                    radius = Double.parseDouble(lineScanner.next());
+                    
+                    circle = new EntryCircle(oIndex, vertices.getEntry(vIndex), radius, colors.getEntry(cIndex));
+                    this.circles.add(circle); // adds circle to list of circles
+                    oIndex = oIndex + 1; // Increments the index
+                            
+                }
+            }
+        }
+        
 
         
         
