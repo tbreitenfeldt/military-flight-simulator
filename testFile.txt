@@ -7,10 +7,15 @@ v,1,-60.8,523.5,0
 v,2,69.6,506,0
 v,3,69.6,462.2,0
 ; parking,v#,c#,radius,bottom to top
-o,46,5,10,; radius 10
-o,47,5,10,
-o,48,5,10,
+o,1,1,10,; radius 10
+o,2,2,10,
+o,3,3,10,
 ; carrier outline,v#,c#,waterline bottom left counterclockwise
 e,1,1,
 e,2,1,
 e,3,1,
+
+e,3,1,
+e,2,1,
+
+

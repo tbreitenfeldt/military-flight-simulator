@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class GlyphLoader {
@@ -45,14 +46,18 @@ public class GlyphLoader {
         // Create file reader
         Scanner fin = new Scanner(file);
         int lineNumber = 0; // First line in file is 1
-        int vIndexStart = -1;// First Vertex starts as unknown
-        int eIndex = 0; // Edge Index
-        int oIndex = 0; // Circle Index
+        int oIndex = 1; // Circle Index
+        int eIndex = 1;  //edge index 
+        int[] vertexIndicies = new int[2];  //stores the starting and ending vertex for the current edge
+        char type;
         ArrayList<EntryEdge> elist = null;
         
         if (fin == null) {
             throw new IOException("Scanner couldn't be created.");
         }
+        
+        //fill vertexIndicies with -1 as starting positions
+        Arrays.fill(vertexIndicies, -1);
         
         while (fin.hasNext()) {
             
@@ -75,20 +80,18 @@ public class GlyphLoader {
 
             //search the end of the line for 0 or more camas or spaces and replace with empty string            
             line = line.replaceAll("(,| )*$", "");
-            
+
             Scanner lineScanner = new Scanner(line);
             lineScanner.useDelimiter(",");
-            char type;
             
             //Handles blank line that ends a list of edges
-            if(line.equals(""))
-            {
-                if(elist != null)
-                {
-                    edges.add(elist);
+            if(line.equals("")) {
+
+                if(elist != null) {
+                    this.edges.add(elist);
                 }
-                vIndexStart = -1; //A blank line or end of file ends this list and starts a new one, if there are more entries
-                elist = null; //
+                vertexIndicies[0] = -1; //A blank line or end of file ends this list and starts a new one, if there are more entries
+                elist = null;
             }
             
             if (lineScanner.hasNext()) {
@@ -103,14 +106,15 @@ public class GlyphLoader {
                     readVertex(lineScanner, lineNumber);
                 
                 } else if (type == 'e') {
-                    if(elist == null)
-                    {
+                    if(elist == null) {
                         elist = new ArrayList<EntryEdge>();
                     }
-                    readEdge(lineScanner, vIndexStart, elist, eIndex, lineNumber);
+                    readEdge(lineScanner, elist, vertexIndicies, eIndex, lineNumber);
+                    eIndex++;
                 
                 } else if (type == 'o') {
                     readCircle(lineScanner, oIndex, lineNumber);
+                    oIndex++;
                 }
             
             } 
@@ -194,8 +198,7 @@ public class GlyphLoader {
             vertices.addEntry(new EntryVertex(index, x, y, z));
     }//end method
     
-    private void readEdge(Scanner lineScanner, int vIndexStart, ArrayList<EntryEdge> elist, int eIndex, int lineNumber) throws InvalidLayoutException {
-        
+    private void readEdge(Scanner lineScanner, ArrayList<EntryEdge> elist, int[] vertexIndicies, int eIndex, int lineNumber) throws InvalidLayoutException {
         // An edge entry: e, start or end vertex, color index = e, 1, 2
         
         EntryEdge edge;
@@ -205,21 +208,19 @@ public class GlyphLoader {
         // Looking for vertex for end of edge
         if (lineScanner.hasNextInt()) {
             
-            vIndexEnd = Integer.parseInt(lineScanner.next());
+            vertexIndicies[1] = Integer.parseInt(lineScanner.next());
             
             if (lineScanner.hasNextInt()) {
                 
                 cIndex = Integer.parseInt(lineScanner.next());
                 
-                if(vIndexStart >= 0) { //Checks if is the first vertex
-                     edge = new EntryEdge(eIndex, vertices.getEntry(vIndexStart),vertices.getEntry(vIndexEnd),colors.getEntry(cIndex));
-                     elist.add(edge);//Adds edge to current edge list
-                     eIndex = eIndex + 1;//Increments the index
+                if(vertexIndicies[0] >= 0) { //Checks if is the first vertex
+                    edge = new EntryEdge(eIndex, vertices.getEntry(vertexIndicies[0]),vertices.getEntry(vertexIndicies[1]),colors.getEntry(cIndex));
+                    elist.add(edge);//Adds edge to current edge list
                 } 
-                vIndexStart = vIndexEnd; // Sets the beginning of the next edge from the end of the last.
+                vertexIndicies[0] = vertexIndicies[1]; // Sets the beginning of the next edge from the end of the last.
             }
         }
-        
             
     }//end method
     
@@ -239,11 +240,11 @@ public class GlyphLoader {
                 
                 if(lineScanner.hasNextDouble()) {
                     radius = Double.parseDouble(lineScanner.next());
-                    
+
                     circle = new EntryCircle(oIndex, vertices.getEntry(vIndex), radius, colors.getEntry(cIndex));
+
                     this.circles.add(circle); // adds circle to list of circles
-                    oIndex = oIndex + 1; // Increments the index
-                            
+                    
                 }
             }
         }
