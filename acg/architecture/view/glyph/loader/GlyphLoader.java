@@ -68,6 +68,8 @@ public class GlyphLoader {
             String line = fin.nextLine();
             lineNumber++;
             
+            line = line.trim();
+            
             if (line.contains(";")) {
                 
                 if (line.charAt(0) == ';') {
@@ -78,6 +80,7 @@ public class GlyphLoader {
                 }
             }
 
+            
             //search the end of the line for 0 or more camas or spaces and replace with empty string            
             line = line.replaceAll("(,| )*$", "");
 
@@ -123,6 +126,13 @@ public class GlyphLoader {
         }//end while loop
         
         fin.close();
+        
+        // Add the last edge list, must do it manually, because above we only have the edge lists being added
+        // during a check on a blank line, the last line in the file could be an edge (which may or may not be
+        // followed by blank lines until the end of file)
+        if (elist != null)
+        	this.edges.add(elist);
+        	
         
         return new LayoutBundle(this.edges, this.circles);
     }//end method
@@ -202,7 +212,6 @@ public class GlyphLoader {
         // An edge entry: e, start or end vertex, color index = e, 1, 2
         
         EntryEdge edge;
-        int vIndexEnd;
         int cIndex;
         
         // Looking for vertex for end of edge
@@ -220,7 +229,11 @@ public class GlyphLoader {
                 } 
                 vertexIndicies[0] = vertexIndicies[1]; // Sets the beginning of the next edge from the end of the last.
             }
+            else
+            	throw new InvalidLayoutException("invalid layout", lineNumber);
         }
+        else
+        	throw new InvalidLayoutException("invalid layout", lineNumber);
             
     }//end method
     
@@ -246,12 +259,15 @@ public class GlyphLoader {
                     this.circles.add(circle); // adds circle to list of circles
                     
                 }
+                else
+                	throw new InvalidLayoutException("invalid layout", lineNumber);
             }
+            else
+            	throw new InvalidLayoutException("invalid layout", lineNumber);
         }
-        
-
-        
-        
+        else
+        	throw new InvalidLayoutException("invalid layout", lineNumber);
+         
     }//end method
     
     @Override
