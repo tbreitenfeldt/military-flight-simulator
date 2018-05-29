@@ -148,6 +148,8 @@ public class GlyphLoader {
         }// if
 
         index = lineScanner.nextInt();
+        if (index < 1) throw new InvalidLayoutException("invalid layout: " + lineNumber, lineNumber);
+        
         hex = lineScanner.next();
         
         //use a regular expression to insure the hex value is really hexidecimal
@@ -175,6 +177,8 @@ public class GlyphLoader {
             
             index = Integer.parseInt(lineScanner.next());
             
+            if (index < 1) throw new InvalidLayoutException("invalid layout: " + lineNumber, lineNumber);
+            
             // Looking for x value
             if (lineScanner.hasNextDouble()) {
                 
@@ -189,6 +193,10 @@ public class GlyphLoader {
                     if (lineScanner.hasNextDouble()) {
                         
                         z = Double.parseDouble(lineScanner.next());
+                        
+                        if (lineScanner.hasNext()) {
+                            throw new InvalidLayoutException("Invalid syntax: " + lineNumber, lineNumber);
+                        }//end if
                         
                         success = true; // We have this because we are not sure if Tappan keeps the program running if an exception occurs
                     }
@@ -219,21 +227,30 @@ public class GlyphLoader {
             
             vertexIndicies[1] = Integer.parseInt(lineScanner.next());
             
+            if (vertexIndicies[1] < 1) throw new InvalidLayoutException("invalid layout: " + lineNumber, lineNumber);
+            
             if (lineScanner.hasNextInt()) {
                 
                 cIndex = Integer.parseInt(lineScanner.next());
+                if (cIndex < 1) throw new InvalidLayoutException("invalid layout: " + lineNumber, lineNumber);
                 
                 if(vertexIndicies[0] >= 0) { //Checks if is the first vertex
-                    edge = new EntryEdge(eIndex, vertices.getEntry(vertexIndicies[0]),vertices.getEntry(vertexIndicies[1]),colors.getEntry(cIndex));
+                    
+                	edge = new EntryEdge(eIndex, vertices.getEntry(vertexIndicies[0]),vertices.getEntry(vertexIndicies[1]),colors.getEntry(cIndex));
                     elist.add(edge);//Adds edge to current edge list
-                } 
+                }
+                
+            	if (lineScanner.hasNext()) {
+                    throw new InvalidLayoutException("Invalid syntax: " + lineNumber, lineNumber);
+                }//end if
+            	
                 vertexIndicies[0] = vertexIndicies[1]; // Sets the beginning of the next edge from the end of the last.
             }
             else
-            	throw new InvalidLayoutException("invalid layout", lineNumber);
+            	throw new InvalidLayoutException("invalid layout: " + lineNumber, lineNumber);
         }
         else
-        	throw new InvalidLayoutException("invalid layout", lineNumber);
+        	throw new InvalidLayoutException("invalid layout: " + lineNumber, lineNumber);
             
     }//end method
     
@@ -248,25 +265,35 @@ public class GlyphLoader {
         if(lineScanner.hasNextInt()) {
             vIndex = Integer.parseInt(lineScanner.next());
             
+            if (vIndex < 1) throw new InvalidLayoutException("invalid layout: " + lineNumber, lineNumber);
+            
             if(lineScanner.hasNextInt()) {
                 cIndex = Integer.parseInt(lineScanner.next());
                 
+                if (cIndex < 1) throw new InvalidLayoutException("invalid layout: " + lineNumber, lineNumber);
+                
                 if(lineScanner.hasNextDouble()) {
                     radius = Double.parseDouble(lineScanner.next());
-
+                    
+                    if (radius <= 0) throw new InvalidLayoutException("invalid layout: " + lineNumber, lineNumber);
+                    
+                    if (lineScanner.hasNext()) {
+                        throw new InvalidLayoutException("Invalid syntax: " + lineNumber, lineNumber);
+                    }//end if
+                    
                     circle = new EntryCircle(oIndex, vertices.getEntry(vIndex), radius, colors.getEntry(cIndex));
 
                     this.circles.add(circle); // adds circle to list of circles
                     
                 }
                 else
-                	throw new InvalidLayoutException("invalid layout", lineNumber);
+                	throw new InvalidLayoutException("invalid layout: " + lineNumber, lineNumber);
             }
             else
-            	throw new InvalidLayoutException("invalid layout", lineNumber);
+            	throw new InvalidLayoutException("invalid layout: " + lineNumber, lineNumber);
         }
         else
-        	throw new InvalidLayoutException("invalid layout", lineNumber);
+        	throw new InvalidLayoutException("invalid layout: " + lineNumber, lineNumber);
          
     }//end method
     
