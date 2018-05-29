@@ -23,7 +23,7 @@ public class GlyphLoader {
     private EntryMap<EntryVertex> vertices;
     private List<List<EntryEdge>> edges;
     private List<EntryCircle> circles;
-    private int eIndex = 1;  //edge index
+    private int eIndex = 1;  //edge index 
     
     public GlyphLoader (String filename) throws IOException {
         
