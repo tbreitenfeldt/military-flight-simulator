@@ -17,9 +17,14 @@ public class CommandParser {
         // remove leading and trailing spaces
         cmd = cmd.trim();
         
+        // When cmd enters this spot, cmd should be stripped to be only the command
+        // and nothing else.
         Scanner cmdScanner = new Scanner(cmd);
         String token = "";
         
+        // Here begins selecting the correct command that cmd refers to.  When the command
+        // is selected we are sure that the correct command has been chosen, but within each
+        // command method, we must still check if the command parameters are valid, etc.
         if (cmdScanner.hasNext()) {
             
             token = cmdScanner.next();
@@ -161,6 +166,7 @@ public class CommandParser {
             else if (token.equals("COMMIT") {
                 
                 // COMMIT... commands
+                
                 processCOMMIT();
             }
             
@@ -274,6 +280,20 @@ public class CommandParser {
                 
                 // @CLOCK... commands
                 
+                if (cmdScanner.hasNext()) {
+                    
+                    token = cmdScanner.next();
+                    
+                    if (token.equals("PAUSE") || token.equals("RESUME"))
+                        processCLOCK_PAUSE_RESUME();
+                    
+                    else
+                        processCLOCK_RATE();
+                }
+                
+                else
+                    processCLOCK();
+                
             }
             
             else if (token.equals("@RUN") {
@@ -299,5 +319,4 @@ public class CommandParser {
             throw new Exception("No command detected");
         
     }
-    
 }
