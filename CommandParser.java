@@ -3,7 +3,7 @@ package acg.project.cli.parser;
 
 public class CommandParser {
     
-    private acd.project.action.ActionSet actionSet;
+    private acg.project.action.ActionSet actionSet;
     private String cmd;
     
     public CommandParser (acg.project.action.ActionSet actionSet, String cmd) {
