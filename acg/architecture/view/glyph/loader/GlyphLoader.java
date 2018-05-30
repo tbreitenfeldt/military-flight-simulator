@@ -121,7 +121,9 @@ public class GlyphLoader {
                 } else if (type == 'o') {
                     readCircle(lineScanner, oIndex, lineNumber);
                     oIndex++;
-                }
+                } else {
+                    throw new InvalidLayoutException("Invalid token entry on line " + lineNumber, lineNumber);
+                }//end else 
             
             } 
             
