@@ -83,6 +83,9 @@ public class GlyphLoader {
             
             //search the end of the line for 0 or more camas or spaces and replace with empty string            
             line = line.replaceAll("(,| )*$", "");
+            //replace all instances where 0 or more spaces or tabs are next to a cama which is next to 0 or more spaces or tabs, with a cama
+            line = line.replaceAll("((\t| )*)(,)((\t| )*)", ",");
+
 
             Scanner lineScanner = new Scanner(line);
             lineScanner.useDelimiter(",");
