@@ -23,7 +23,6 @@ public class GlyphLoader {
     private EntryMap<EntryVertex> vertices;
     private List<List<EntryEdge>> edges;
     private List<EntryCircle> circles;
-    private int eIndex = 1;  //edge index 
     
     public GlyphLoader (String filename) throws IOException {
         
@@ -47,7 +46,8 @@ public class GlyphLoader {
         // Create file reader
         Scanner fin = new Scanner(file);
         int lineNumber = 0; // First line in file is 1
-        int oIndex = 1; // Circle Index 
+        int oIndex = 1; // Circle Index
+        int eIndex = 1;  //edge index 
         int[] vertexIndicies = new int[2];  //stores the starting and ending vertex for the current edge
         char type;
         ArrayList<EntryEdge> elist = null;
@@ -112,8 +112,8 @@ public class GlyphLoader {
                     if(elist == null) {
                         elist = new ArrayList<EntryEdge>();
                     }
-                    readEdge(lineScanner, elist, vertexIndicies, lineNumber);
-                    
+                    readEdge(lineScanner, elist, vertexIndicies, eIndex, lineNumber);
+                    eIndex++;
                 
                 } else if (type == 'o') {
                     readCircle(lineScanner, oIndex, lineNumber);
@@ -160,7 +160,15 @@ public class GlyphLoader {
             throw new InvalidLayoutException("Invalid sintax for color at line " + lineNumber, lineNumber);
         }//end if
         
-        color = Color.decode(hex);
+        
+        try
+        {
+        	color = Color.decode(hex);
+        }
+        catch (Exception e)
+        {
+        	throw new InvalidLayoutException("invalid syntax: " + lineNumber, lineNumber);
+        }
 
         this.colors.addEntry(new EntryColor(index, color));
     }//end method
@@ -216,7 +224,7 @@ public class GlyphLoader {
             vertices.addEntry(new EntryVertex(index, x, y, z));
     }//end method
     
-    private void readEdge(Scanner lineScanner, ArrayList<EntryEdge> elist, int[] vertexIndicies, int lineNumber) throws InvalidLayoutException {
+    private void readEdge(Scanner lineScanner, ArrayList<EntryEdge> elist, int[] vertexIndicies, int eIndex, int lineNumber) throws InvalidLayoutException {
         // An edge entry: e, start or end vertex, color index = e, 1, 2
         
         EntryEdge edge;
@@ -238,7 +246,6 @@ public class GlyphLoader {
                     
                 	edge = new EntryEdge(eIndex, vertices.getEntry(vertexIndicies[0]),vertices.getEntry(vertexIndicies[1]),colors.getEntry(cIndex));
                     elist.add(edge);//Adds edge to current edge list
-                    this.eIndex++;
                 }
                 
             	if (lineScanner.hasNext()) {
