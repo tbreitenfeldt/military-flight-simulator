@@ -1,322 +1,61 @@
 
 package acg.project.cli.parser;
 
+import java.util.Hashtable;
+import java.util.Scanner;
+
 public class CommandParser {
     
-    private acg.project.action.ActionSet actionSet;
     private String cmd;
-    
-    public CommandParser (acg.project.action.ActionSet actionSet, String cmd) {
+    private Hashtable<String, Parser> parsers;
+    private acg.project.action.ActionSet actionSet;
+
+	public CommandParser(acg.project.action.ActionSet actionSet, String cmd) {
         
-        this.actionSet = actionSet;
         this.cmd = cmd;
+        this.actionSet = actionSet;
     }
-    
-    public void interpret() {
+
+	public void interpret() {
         
-        // remove leading and trailing spaces
-        cmd = cmd.trim();
-        
-        // When cmd enters this spot, cmd should be stripped to be only the command
-        // and nothing else.
+		parsers = new Hashtable<String, Parser>();
+		
+		parsers.put("DEFINE", new TemplateParser(this.actionSet, cmd));
+		parsers.put("SHOW", new TemplateParser(this.actionSet, cmd));
+		parsers.put("CREATE", new AgentParser(this.actionSet, cmd)); 
+        parsers.put("POPULATE", new StructuralParser(this.actionSet, cmd)); 
+        parsers.put("COMMIT", new StructuralParser(this.actionSet, cmd));
+        parsers.put("DO", new BehavioralParser(this.actionSet, cmd));
+        parsers.put("@DO", new BehavioralParser(this.actionSet, cmd));
+        parsers.put("@CLOCK", new MiscParser(this.actionSet, cmd));
+        parsers.put("@RUN", new MiscParser(this.actionSet, cmd));
+        parsers.put("@WAIT", new MiscParser(this.actionSet, cmd));
+
         Scanner cmdScanner = new Scanner(cmd);
-        String token = "";
+        String firstWord = "";
+        Parser parser = null;
         
-        // Here begins selecting the correct command that cmd refers to.  When the command
-        // is selected we are sure that the correct command has been chosen, but within each
-        // command method, we must still check if the command parameters are valid, etc.
         if (cmdScanner.hasNext()) {
             
-            token = cmdScanner.next();
+            firstWord = cmdScanner.next();
+            cmdScanner.close();
+            cmdScanner = null;
             
-            if (token.equals("DEFINE") {
-                
-                // DEFINE... commands
-                
-                if (cmdScanner.hasNext()) {
-                   
-                    token = cmdScanner.next();
-                    
-                    if (token.equals("TRAP"))
-                        processDEFINE_TRAP();
-                    
-                    else if (token.equals("CATAPULT"))
-                        processDEFINE_CATAPULT();
-                    
-                    else if (token.equals("OLS_XMT"))
-                        processDEFINE_OLS_XMT();
-                    
-                    else if (token.equals("CARRIER"))
-                        processDEFINE_CARRIER();
-                    
-                    else if (token.equals("FIGHTER"))
-                        processDEFINE_FIGHTER();
-                    
-                    else if (token.equals("TANKER"))
-                        processDEFINE_TANKER();
-                    
-                    else if (token.equals("BOOM")) {
-                        
-                        if (cmdScanner.hasNext()) {
-                            
-                            token = cmdScanner.next();
-                            
-                            if (token.equals("MALE"))
-                                processDEFINE_BOOM_MALE();
-                            
-                            else if (token.equals("FEMALE"))
-                                processDEFINE_BOOM_FEMALE();
-                            
-                            else
-                                throw new Exception("Not a valid command");
-                        }
-                        
-                        else
-                            throw new Exception ("Not a valid DEFINE BOOM command");
-                        
-                    }
-                    
-                    else if (token.equals("BARRIER"))
-                        processDEFINE_BARRIER();
-                    
-                    else
-                        throw new Exception("Not a valid DEFINE command");
-                }
-                
-                else
-                    throw new Exception("Not a valid command");
-                
+            try {
+                parser = parsers.get(firstWord); // manually catch the hashtable throwing an exception if the command doesnt exist and
+                // throw it ourselves because it is an invalid command
+            }
+            catch (Exception e) {
+                throw new Exception("Invalid command");
             }
             
-            else if (token.equals("SHOW") {
-                
-                // SHOW... commands
-                
-                if (cmdScanner.hasNext()) {
-                    
-                    token = cmdScanner.next();
-                    
-                    if (token.equals("TEMPLATE"))
-                        processSHOW_TEMPLATE();
-                    
-                    else
-                        throw new Exception("Not a valid command");
-                }
-                
-                else
-                    throw new Exception("Not a valid SHOW command");
-                
-            }
-            
-            else if (token.equals("CREATE") {
-                
-                // CREATE... commands
-                
-                if (cmdScanner.hasNext()) {
-                    
-                    token = cmdScanner.next();
-                    
-                    if (token.equals("CARRIER"))
-                        processCREATE_CARRIER();
-                    
-                    else if (token.equals("FIGHTER"))
-                        processCREATE_FIGHTER();
-                    
-                    else if (token.equals("TANKER"))
-                        processCREATE_TANKER();
-                    
-                    else if (token.equals("OLS_XMT"))
-                        processCREATE_OLS_XMT();
-                    
-                    else if (token.equals("TAILHOOK"))
-                        processCREATE_TAILHOOK();
-                    
-                    else
-                        throw new Exception("Not a valid CREATE command");
-                }
-                
-                else
-                    throw new Exception("Not a valid CREATE command");
-                
-            }
-            
-            else if (token.equals("POPULATE") {
-                
-                // POPULATE... commands
-                
-                if (cmdScanner.hasNext()) {
-                    
-                    token = cmdScanner.next();
-                    
-                    if (token.equals("CARRIER"))
-                        processPOPULATE_CARRIER();
-                    
-                    else if (token.equals("WORLD"))
-                        processPOPULATE_WORLD_WITH();
-                    
-                    else
-                        throw new Exception("Not a valid command");
-                }
-                
-                else
-                    throw new Exception("Not a valid POPULATE command");
-                
-            }
-            
-            else if (token.equals("COMMIT") {
-                
-                // COMMIT... commands
-                
-                processCOMMIT();
-            }
-            
-            else if (token.equals("DO") {
-                
-                // DO... commands
-                
-                if (cmdScanner.hasNext()) {
-                    
-                    // pass over the <aid>
-                    cmdScanner.next();
-                    
-                    if (cmdScanner.hasNext()) {
-                        
-                        token = cmdScanner.next();
-                        
-                        if (token.equals("ASK"))
-                            processDO_ASK();
-                        
-                        else if (token.equals("CATAPULT"))
-                            processDO_CATAPULT();
-                        
-                        else if (token.equals("SET")) {
-                            
-                            if (cmdScanner.hasNext()) {
-                                
-                                token = cmdScanner.next();
-                                
-                                if (token.equals("HEADING"))
-                                    processDO_SET_HEADING();
-                                
-                                else
-                                    throw new Exception("Not a valid command");
-                            }
-                            
-                            else
-                                throw new Exception("Not a valid command");
-                        }
-                        
-                        else if (token.equals("BOOM"))
-                            processDO_BOOM();
-                        
-                        else
-                            throw new Exception("Not a valid command");
-                            
-                    }
-                    
-                    else
-                        throw new Exception("Not a valid DO command");
-                }
-                
-                else
-                    throw new Exception("Not a valid DO command");
-                
-            }
-            
-            else if (token.equals("@DO") {
-                
-                // @DO... commands
-                
-                if (cmdScanner.hasNext()) {
-                    
-                    // pass over the <aid>
-                    cmdScanner.next();
-                    
-                    if (cmdScanner.hasNext()) {
-                        
-                        token = cmdScanner.next();
-                        
-                        if (token.equals("FORCE") {
-                            
-                            if (cmdScanner.hasNext()) {
-                                
-                                token = cmdScanner.next();
-                                
-                                if (token.equals("COORDINATES")) {
-                                    
-                                    if (cmd.contains("HEADING") && cmd.contains("SPEED"))
-                                        processDO_FORCE_ALL();
-                                    
-                                    else
-                                        processDO_FORCE_COORDINATES();
-                                }
-                                
-                                else if (token.equals("HEADING"))
-                                    processDO_FORCE_HEADING();
-                                
-                                else
-                                    throw new Exception("Not a valid command");
-                            }
-                            
-                            else
-                                throw new Exception("Not a valid command");
-                        }
-                    
-                        else
-                            throw new Exception("Not a valid command");
-                    }
-                    
-                    else
-                        throw new Exception("Not a valid command");
-
-                }
-                
-                else
-                    throw new Exception("Not a valid @DO command");
-                
-            }
-            
-            else if (token.equals("@CLOCK") {
-                
-                // @CLOCK... commands
-                
-                if (cmdScanner.hasNext()) {
-                    
-                    token = cmdScanner.next();
-                    
-                    if (token.equals("PAUSE") || token.equals("RESUME"))
-                        processCLOCK_PAUSE_RESUME();
-                    
-                    else
-                        processCLOCK_RATE();
-                }
-                
-                else
-                    processCLOCK();
-                
-            }
-            
-            else if (token.equals("@RUN") {
-                
-                // @RUN... commands
-                
-                processRUN();
-                
-            }
-            
-            else if (token.equals("@WAIT") {
-                
-                // @WAIT... commands
-                
-                processWAIT();
-            }
-            
-            else
-                throw new Exception("Not a valid command");
-            
+            if (parser != null)
+                parser.parseCommand();
         }
-        else
-            throw new Exception("No command detected");
         
-    }
+        if (cmdScanner != null) {
+            cmdScanner.close();
+            cmdScanner = null;
+        }
+	}
 }
