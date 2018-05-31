@@ -2,19 +2,18 @@ package acg.project.cli.parser;
 
 import java.util.Scanner;
 
+import acg.project.action.ActionSet;
 import acg.project.action.command.A_Command;
 import acg.project.action.command.creational.create.*;
 
 public class AgentParser extends Parser {
 
-    public AgentParser(acg.project.action.ActionSet actionSet, String cmd) {
-        
-        this.actionSet = actionSet;
-        this.cmd = cmd;
+    public AgentParser(ActionSet actionSet) {
+        super(actionSet);
     }
     
     @Override
-    public void parseCommand() throws Exception {
+    public void parseCommand(String cmd) throws ParseException {
         
         Scanner cmdScanner = new Scanner(cmd);
         
@@ -54,16 +53,16 @@ public class AgentParser extends Parser {
                         this.actionSet.getActionCreationalCreate().submit((CommandCreationalCreateTailhook) the_command);
                     }
                     else
-                    	throw new Exception("Invalid command");
+                    	throw new ParseException("Invalid command");
                 }
                 else
-                	throw new Exception("Invalid command");
+                	throw new ParseException("Invalid command");
             }
             else
-            	throw new Exception("Invalid command");
+            	throw new ParseException("Invalid command");
         }
         else
-            throw new Exception("Invalid command");
+            throw new ParseException("Invalid command");
         
         if (cmdScanner != null)
         	cmdScanner.close();

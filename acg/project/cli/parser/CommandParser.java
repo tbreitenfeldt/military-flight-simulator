@@ -4,33 +4,33 @@ package acg.project.cli.parser;
 import java.util.Hashtable;
 import java.util.Scanner;
 
+import acg.project.action.ActionSet;
+
+
 public class CommandParser {
     
     private String cmd;
     private Hashtable<String, Parser> parsers;
-    private acg.project.action.ActionSet actionSet;
+    private ActionSet  actionSet;
 
 	public CommandParser(acg.project.action.ActionSet actionSet, String cmd) {
-        
         this.cmd = cmd;
         this.actionSet = actionSet;
+        this.parsers = new Hashtable<String, Parser>();
+        
+		parsers.put("DEFINE", new TemplateParser(actionSet));
+		parsers.put("SHOW", new TemplateParser(actionSet));
+		parsers.put("CREATE", new AgentParser(actionSet)); 
+        parsers.put("POPULATE", new StructuralParser(actionSet)); 
+        parsers.put("COMMIT", new StructuralParser(actionSet));
+        parsers.put("DO", new BehavioralParser(actionSet));
+        parsers.put("@DO", new BehavioralParser(actionSet));
+        parsers.put("@CLOCK", new MiscParser(actionSet));
+        parsers.put("@RUN", new MiscParser(actionSet));
+        parsers.put("@WAIT", new MiscParser(actionSet));
     }
 
-	public void interpret() {
-        
-		parsers = new Hashtable<String, Parser>();
-		
-		parsers.put("DEFINE", new TemplateParser(this.actionSet, cmd));
-		parsers.put("SHOW", new TemplateParser(this.actionSet, cmd));
-		parsers.put("CREATE", new AgentParser(this.actionSet, cmd)); 
-        parsers.put("POPULATE", new StructuralParser(this.actionSet, cmd)); 
-        parsers.put("COMMIT", new StructuralParser(this.actionSet, cmd));
-        parsers.put("DO", new BehavioralParser(this.actionSet, cmd));
-        parsers.put("@DO", new BehavioralParser(this.actionSet, cmd));
-        parsers.put("@CLOCK", new MiscParser(this.actionSet, cmd));
-        parsers.put("@RUN", new MiscParser(this.actionSet, cmd));
-        parsers.put("@WAIT", new MiscParser(this.actionSet, cmd));
-
+	public void interpret() throws ParseException {
         Scanner cmdScanner = new Scanner(cmd);
         String firstWord = "";
         Parser parser = null;
@@ -38,6 +38,7 @@ public class CommandParser {
         if (cmdScanner.hasNext()) {
             
             firstWord = cmdScanner.next();
+            firstWord = firstWord.toLowerCase();
             cmdScanner.close();
             cmdScanner = null;
             
@@ -46,11 +47,11 @@ public class CommandParser {
                 // throw it ourselves because it is an invalid command
             }
             catch (Exception e) {
-                throw new Exception("Invalid command");
+                throw new ParseException("Invalid command");
             }
             
             if (parser != null)
-                parser.parseCommand();
+                parser.parseCommand(this.cmd);
         }
         
         if (cmdScanner != null) {

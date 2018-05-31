@@ -2,19 +2,19 @@ package acg.project.cli.parser;
 
 import java.util.Scanner;
 
+import acg.project.action.ActionSet;
 import acg.project.action.command.A_Command;
 import acg.project.action.command.creational.define.*;
 
+
 public class TemplateParser extends Parser {
 
-    public TemplateParser(acg.project.action.ActionSet actionSet, String cmd) {
-        
-        this.actionSet = actionSet;
-        this.cmd = cmd;
+    public TemplateParser(ActionSet actionSet) {
+        super(actionSet);
     }
     
     @Override
-    public void parseCommand() throws Exception {
+    public void parseCommand(String cmd) throws ParseException {
         
         Scanner cmdScanner = new Scanner(cmd);
         
@@ -86,14 +86,14 @@ public class TemplateParser extends Parser {
         
 
         if (the_command == null)
-            throw new Exception("Invalid command");
+            throw new ParseException("Invalid command");
     }
 	
     private CommandCreationalDefineTrap createCommand_DEFINE_TRAP() {
         
         // process the command text and create the command object and return.
         // if the command cannot be created due to invalid syntax, return null
-        // or throw an exception
+        // or throw an ParseException
         
         return new CommandCreationalDefineTrap(null, null, null, null, null, null, null);
     }

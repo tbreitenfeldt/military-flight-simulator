@@ -1,9 +1,15 @@
 package acg.project.cli.parser;
 
+import acg.project.action.ActionSet;
+
+
 public abstract class Parser {
     
-	public String cmd;
-    public acg.project.action.ActionSet actionSet;
+    private ActionSet actionSet;
     
-	public abstract void parseCommand() throws Exception;
+    public Parser(ActionSet actionSet) {
+        this.actionSet = actionSet;
+    }
+    
+    public abstract void parseCommand(String cmd) throws ParseException;
 }
