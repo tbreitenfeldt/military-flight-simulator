@@ -7,10 +7,12 @@ import acg.project.action.command.A_Command;
 import acg.project.action.command.creational.define.*;
 
 
-public class TemplateParser extends Parser {
+public class TemplateParser implements Parser {
+
+    private ActionSet actionSet;
 
     public TemplateParser(ActionSet actionSet) {
-        super(actionSet);
+        this.actionSet = actionSet;
     }
     
     @Override
