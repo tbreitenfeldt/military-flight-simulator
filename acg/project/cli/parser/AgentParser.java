@@ -6,12 +6,11 @@ import acg.project.action.ActionSet;
 import acg.project.action.command.A_Command;
 import acg.project.action.command.creational.create.*;
 
-public class AgentParser implements Parser {
 
-    private ActionSet actionSet;
+public class AgentParser extends Parser {
 
     public AgentParser(ActionSet actionSet) {
-        this.actionSet = actionSet;
+        super(actionSet);
     }
     
     @Override

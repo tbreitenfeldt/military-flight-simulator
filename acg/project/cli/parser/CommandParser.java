@@ -18,9 +18,9 @@ public class CommandParser {
         this.actionSet = actionSet;
         this.parsers = new Hashtable<String, Parser>();
         
-		parsers.put("DEFINE", new TemplateParser(actionSet));
-		parsers.put("SHOW", new TemplateParser(actionSet));
-		parsers.put("CREATE", new AgentParser(actionSet)); 
+        parsers.put("DEFINE", new TemplateParser(actionSet));
+        parsers.put("SHOW", new TemplateParser(actionSet));
+        parsers.put("CREATE", new AgentParser(actionSet)); 
         parsers.put("POPULATE", new StructuralParser(actionSet)); 
         parsers.put("COMMIT", new StructuralParser(actionSet));
         parsers.put("DO", new BehavioralParser(actionSet));
@@ -38,7 +38,7 @@ public class CommandParser {
         if (cmdScanner.hasNext()) {
             
             firstWord = cmdScanner.next();
-            firstWord = firstWord.toLowerCase();
+            firstWord = firstWord.toUpperCase();
             cmdScanner.close();
             cmdScanner = null;
             
