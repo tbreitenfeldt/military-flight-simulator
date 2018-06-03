@@ -9,8 +9,6 @@ import acg.architecture.datatype.*;
 
 
 public class TemplateParser extends Parser {
-
-    private String cmd;
     
     public TemplateParser(ActionSet actionSet) {
         super(actionSet);
@@ -18,8 +16,6 @@ public class TemplateParser extends Parser {
     
     @Override
     public void parseCommand(String cmd) throws ParseException {
-        
-        this.cmd = cmd;
         
         Scanner cmdScanner = new Scanner(cmd);
         
@@ -40,22 +36,22 @@ public class TemplateParser extends Parser {
                     token = cmdScanner.next();
                     
                     if (token.equalsIgnoreCase("TRAP"))
-                        the_command = createCommand_DEFINE_TRAP();
+                        the_command = createCommand_DEFINE_TRAP(cmd);
                     
                     else if (token.equalsIgnoreCase("CATAPULT"))
-                        the_command = createCommand_DEFINE_CATAPULT();
+                        the_command = createCommand_DEFINE_CATAPULT(cmd);
                     
                     else if (token.equalsIgnoreCase("OLS_XMT"))
-                        the_command = createCommand_DEFINE_OLS_XMT();
+                        the_command = createCommand_DEFINE_OLS_XMT(cmd);
                     
                     else if (token.equalsIgnoreCase("CARRIER"))
-                        the_command = createCommand_DEFINE_CARRIER();
+                        the_command = createCommand_DEFINE_CARRIER(cmd);
                     
                     else if (token.equalsIgnoreCase("FIGHTER"))
-                        the_command = createCommand_DEFINE_FIGHTER();
+                        the_command = createCommand_DEFINE_FIGHTER(cmd);
                     
                     else if (token.equalsIgnoreCase("TANKER"))
-                        the_command = createCommand_DEFINE_TANKER();
+                        the_command = createCommand_DEFINE_TANKER(cmd);
                     
                     else if (token.equalsIgnoreCase("BOOM")) {
                         
@@ -64,15 +60,15 @@ public class TemplateParser extends Parser {
                             token = cmdScanner.next();
                             
                             if (token.equalsIgnoreCase("MALE"))
-                                the_command = createCommand_DEFINE_BOOM_MALE();
+                                the_command = createCommand_DEFINE_BOOM_MALE(cmd);
                             
                             else if (token.equalsIgnoreCase("FEMALE"))
-                                the_command = createCommand_DEFINE_BOOM_FEMALE();
+                                the_command = createCommand_DEFINE_BOOM_FEMALE(cmd);
                         }
                     }
                     
                     else if (token.equalsIgnoreCase("BARRIER"))
-                        the_command = createCommand_DEFINE_BARRIER();
+                        the_command = createCommand_DEFINE_BARRIER(cmd);
                 }
                 
                 if (the_command != null)
@@ -81,7 +77,7 @@ public class TemplateParser extends Parser {
             }
             
             else if (token.equalsIgnoreCase("SHOW")) {
-                the_command = createCommand_SHOW_TEMPLATE();
+                the_command = createCommand_SHOW_TEMPLATE(cmd);
                 
                 if (the_command != null)
                 	this.actionSet.getActionCreationalDefine().submit((CommandCreationalShowTemplate) the_command);
@@ -94,87 +90,119 @@ public class TemplateParser extends Parser {
             throw new ParseException("Invalid command");
     }
 	
-    private CommandCreationalDefineTrap createCommand_DEFINE_TRAP() throws ParseException {
+    public CommandCreationalDefineTrap createCommand_DEFINE_TRAP(String cmd) throws ParseException {
         
         // DEFINE TRAP <tid> ORIGIN <origin> AZIMUTH <azimuth> WIDTH <distance> LIMIT WEIGHT <weight> 
         // SPEED <speed> MISS <percent>
         
-        Scanner cmdScanner = new Scanner(this.cmd);
+        Scanner cmdScanner = new Scanner(cmd);
         String token = "";
         CommandCreationalDefineTrap TRAP;
         
         try {
-            cmdScanner.next(); // DEFINE
-            cmdScanner.next(); // TRAP
-        }
-        catch (Exception e) {
-            throw new ParseException();
-        }
-        
-        try {
             
+        	token = cmdScanner.next(); // DEFINE
+        	token += " " + cmdScanner.next(); // TRAP
+        	if(!token.equalsIgnoreCase("DEFINE TRAP"))
+        		throw new ParseException();
+        	
             token = cmdScanner.next(); // <tid>
             Identifier tid = ParseUtils.parseID(token);
             
-            cmdScanner.next(); // ORIGIN
+            token = cmdScanner.next(); // ORIGIN
+            if (!token.equalsIgnoreCase("ORIGIN"))
+            	throw new ParseException();
             
             token = cmdScanner.next(); // <origin>
             CoordinateCartesianRelative origin = ParseUtils.parseORIGIN(token);
             
-            cmdScanner.next(); // AZIMUTH
+            token = cmdScanner.next(); // AZIMUTH
+            if (!token.equalsIgnoreCase("AZIMUTH"))
+            	throw new ParseException();
             
             token = cmdScanner.next(); // <azimuth>
-            // AngleNavigational azimuth = ParseUtils.parseAZIMUTH(token);
+            AngleNavigational azimuth = ParseUtils.parseAZIMUTH(token);
             
+            token = cmdScanner.next(); // WIDTH
+            if (!token.equalsIgnoreCase("WIDTH"))
+            	throw new ParseException();
             
-            return new CommandCreationalDefineTrap (tid, origin, null, null, null, null, null);
+            token = cmdScanner.next(); // <width>
+            Distance width = ParseUtils.parseDISTANCE(token);
+            
+            token = cmdScanner.next(); // LIMIT
+            token += " " + cmdScanner.next(); // WEIGHT
+            if (!token.equalsIgnoreCase("LIMIT WEIGHT"))
+            	throw new ParseException();
+            
+            token = cmdScanner.next(); // <weight>
+            Weight weight = ParseUtils.parseWEIGHT(token);
+            
+            token = cmdScanner.next(); // SPEED
+            if (!token.equalsIgnoreCase("SPEED"))
+            	throw new ParseException();
+            
+            token = cmdScanner.next(); // <speed>
+            Speed speed = ParseUtils.parseSPEED(token);
+            
+            token = cmdScanner.next(); // MISS
+            if (!token.equalsIgnoreCase("MISS"))
+            	throw new ParseException();
+            
+            token = cmdScanner.next(); // <percent>
+            Percent percent = ParseUtils.parsePERCENT(token);
+            
+            if (cmdScanner.hasNext()) // there should be nothing left in the command text
+            	throw new ParseException();
+            
+            return new CommandCreationalDefineTrap (tid, origin, azimuth, width, weight, speed, percent);
         }
         catch (Exception e){
             throw new ParseException();
         }
     }
 	
-    private A_Command createCommand_SHOW_TEMPLATE() {
+    public A_Command createCommand_SHOW_TEMPLATE(String cmd) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private A_Command createCommand_DEFINE_BARRIER() {
+	public A_Command createCommand_DEFINE_BARRIER(String cmd) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private A_Command createCommand_DEFINE_BOOM_FEMALE() {
+	public A_Command createCommand_DEFINE_BOOM_FEMALE(String cmd) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private A_Command createCommand_DEFINE_BOOM_MALE() {
+	public A_Command createCommand_DEFINE_BOOM_MALE(String cmd) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private A_Command createCommand_DEFINE_TANKER() {
+	public A_Command createCommand_DEFINE_TANKER(String cmd) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private A_Command createCommand_DEFINE_FIGHTER() {
+	public A_Command createCommand_DEFINE_FIGHTER(String cmd) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private A_Command createCommand_DEFINE_CARRIER() {
+	public A_Command createCommand_DEFINE_CARRIER(String cmd) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private A_Command createCommand_DEFINE_OLS_XMT() {
+	public A_Command createCommand_DEFINE_OLS_XMT(String cmd) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private A_Command createCommand_DEFINE_CATAPULT() {
+	public A_Command createCommand_DEFINE_CATAPULT(String cmd) {
 		// TODO Auto-generated method stub
 		return null;
 	}
