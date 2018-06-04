@@ -115,18 +115,12 @@ public class AgentParser extends Parser {
             token = cmdScanner.next();  //trap agent id
             idAgentTrap = ParseUtils.parseID(token);
             
-            token = cmdScanner.next();  //optical-landing-system or ols 
-            if (token.equalsIgnoreCase("ols")) {
-                idAgentOLS = ParseUtils.parseID(token);
-            }else {
-                
-                if (token.equalsIgnoreCase("optical-landing-system") && cmdScanner.next().equalsIgnoreCase("transmitter")) {
-                    token = cmdScanner.next();  //ols agent id
-                    idAgentOLS = ParseUtils.parseID(token);
-                } else {
-                    throw new ParseException("Invalid create carrier command, expects \"ols\" or \"optical-landing-system transmitter\"");
-                }//end else
+            if ( !cmdScanner.next().equalsIgnoreCase("ols")) {
+                throw new ParseException("Invalid create carrier command, expects \"ols\"");
             }//end end else
+            
+            token = cmdScanner.next();  //ols agent id
+            idAgentOLS = ParseUtils.parseID(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("at")) {
                 throw new ParseException("Invalid create carrier command, expects \"at\"");
@@ -162,19 +156,169 @@ public class AgentParser extends Parser {
         }//end catch
         
         cmdScanner.close();
-        return new CommandCreationalCreateCarrier(idAgentCarrier, idTemplateCarrier, idAgentCatapult, idAgentBarrier, idAgentTrap, idAgentOLS, coordinates, heading, speed);
+        
+        return new CommandCreationalCreateCarrier(idAgentCarrier, idTemplateCarrier, idAgentCatapult, idAgentBarrier, idAgentTrap,
+                idAgentOLS, coordinates, heading, speed);
     }//end method
     
     private CommandCreationalCreateTailhook createCommandTailhook(String cmd) throws ParseException {
-        return null;
+        Identifier idAgent = null;
+        Identifier idTemplate = null;
+        String token = "";
+        Scanner cmdScanner = new Scanner(cmd);
+        
+        try {
+            token = cmdScanner.next();
+            token += " " + cmdScanner.next();
+            
+            if ( !token.equalsIgnoreCase("create tailhook")) {
+                throw new ParseException("Invalid create tailhook command");
+            }//end if
+            
+            token = cmdScanner.next();  //tailhook agent id
+            idAgent = ParseUtils.parseID(token);
+            
+            if ( !cmdScanner.next().equalsIgnoreCase("from")) {
+                throw new ParseException("Invalid create tailhook command, expects \"from\"");
+            }//end if
+            
+            token = cmdScanner.next();  //tailhook agent id
+            idTemplate = ParseUtils.parseID(token);
+            
+            if (cmdScanner.hasNext()) {
+                throw new ParseException("Correct create tailhook command, but accessive sintax");
+            }//end if
+        } catch(ParseException pe) {
+            throw pe;
+        } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            throw new ParseException("Incomplete command.");
+        }//end catch
+        
+        cmdScanner.close();
+        return new CommandCreationalCreateTailhook(idAgent, idTemplate);
     }//end method
-
+    
     private CommandCreationalCreateOLSTransmitter createCommandOLS_XMT(String cmd) throws ParseException {
-        return null;
+        Identifier idAgent = null;
+        Identifier idTemplate = null;
+        String token = "";
+        Scanner cmdScanner = new Scanner(cmd);
+        
+        try {
+            token = cmdScanner.next();
+            token += " " + cmdScanner.next();
+            
+            if ( !token.equalsIgnoreCase("create ols_xmt")) {
+                throw new ParseException("Invalid create ols_xmt command");
+            }//end if
+            
+            token = cmdScanner.next();  //ols_xmt agent id
+            idAgent = ParseUtils.parseID(token);
+            
+            if ( !cmdScanner.next().equalsIgnoreCase("from")) {
+                throw new ParseException("Invalid create ols_xmt command, expects \"from\"");
+            }//end if
+            
+            token = cmdScanner.next();  //ols_xmt templat id
+            idTemplate = ParseUtils.parseID(token);
+            
+            if (cmdScanner.hasNext()) {
+                throw new ParseException("Correct create ols_xmt command, but accessive sintax");
+            }//end if
+        } catch(ParseException pe) {
+            throw pe;
+        } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            throw new ParseException("Incomplete command.");
+        }//end catch
+        
+        cmdScanner.close();
+        return new CommandCreationalCreateOLSTransmitter(idAgent, idTemplate);
     }//end method
 
     private CommandCreationalCreateTanker createCommandTanker(String cmd) throws ParseException {
-        return null;
+        Identifier idAgentTanker = null;
+        Identifier idTemplateTanker = null;
+        Identifier idAgentBoom = null;
+        CoordinateWorld coordinates = null;
+        Altitude altitude = null;
+        AngleNavigational heading = null;
+        Speed speed = null;
+        String token = null;
+        Scanner cmdScanner = new Scanner(cmd);
+        
+        try {
+            token = cmdScanner.next(); //create 
+            token += " " + cmdScanner.next();  //tanker
+            
+            if (token.equalsIgnoreCase("create tanker")) {
+                throw new ParseException("Invalid create tanker command");
+            }//end if
+            
+            token = cmdScanner.next();  //tanker agent ID
+            idAgentTanker = ParseUtils.parseID(token);
+            
+            if ( !cmdScanner.next().equalsIgnoreCase("from")) {
+                throw new ParseException("Invalid create tanker command, expects \"from\"");
+            }//end if
+            
+            token = cmdScanner .next();  //tanker template id
+            idTemplateTanker = ParseUtils.parseID(token);
+            
+            if ( !cmdScanner.next().equalsIgnoreCase("with")) {
+                throw new ParseException("Invalid create tanker command, expects \"with\"");
+            }//end if
+            
+            if ( !cmdScanner.next().equalsIgnoreCase("boom")) {
+                throw new ParseException("Invalid create tanker command, expects \"boom\"");
+            }//end if
+            
+            token = cmdScanner.next();  //boom agent id
+            idAgentBoom = ParseUtils.parseID(token);
+            
+            if ( !cmdScanner.next().equalsIgnoreCase("at")) {
+                throw new ParseException("Invalid create tanker command, expects \"at\"");
+            }//end if
+            if ( !cmdScanner.next().equalsIgnoreCase("coordinates")) {
+                throw new ParseException("Invalid create tanker command, expects \"at\"");
+            }//end if
+            
+            token = cmdScanner.next();  //coordinates in laditude/longitude
+            coordinates = ParseUtils.parseCOORDINATES(token);
+            
+            if ( !cmdScanner.next().equalsIgnoreCase("altitude")) {
+                throw new ParseException("Invalid create tanker command, expects \"altitude\"");
+            }//end if
+            
+            token = cmdScanner.next();  //altitude 
+            altitude = ParseUtils.parseALTITUDE(token);
+            
+            if ( !cmdScanner.next().equalsIgnoreCase("heading")) {
+                throw new ParseException("Invalid create tanker command, expects \"heading\"");
+            }//end if
+            
+            token = cmdScanner.next();  //course
+            heading = ParseUtils.parseAZIMUTH(token);
+            
+            if ( !token.equalsIgnoreCase("speed")) {
+                throw new ParseException("Invalid create tanker command, expects \"speed\"");
+            }//end if 
+            
+            token = cmdScanner.next();  //speed
+            speed = ParseUtils.parseSPEED(token);
+            
+            if (cmdScanner.hasNext()) {
+                throw new ParseException("Correct command, but accessive sintax");
+            }//end if
+        } catch(ParseException pe) {
+            throw pe;
+        } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            throw new ParseException("Incomplete command.");
+        }//end catch
+        
+        cmdScanner.close();
+        
+        return new CommandCreationalCreateTanker(idAgentTanker, idTemplateTanker, idAgentBoom, coordinates, altitude,
+                heading, speed);
     }//end method
 
     private CommandCreationalCreateFighter createCommandFighter(String cmd) throws ParseException {

@@ -154,5 +154,26 @@ public class ParseUtils {
         
         return new CoordinateWorld(laditude, longitude);
     }//end method
-
+    
+    public static Altitude parseALTITUDE(String token) throws ParseException {
+        double altitude = 0.0;
+        
+        if (token.isEmpty()) {
+            throw new ParseException("Token can not be empty");
+        }//end if
+        
+        try {
+            altitude = Double.parseDouble(token);
+            
+            if (altitude < 0) {
+                throw new ParseException("Invalid altitude, it must be greater or equal to 0.0");
+            }//end if
+            
+        } catch(NumberFormatException nfe) {
+            throw new ParseException("Invalid altitude");
+        }//end catch
+        
+        return new Altitude(altitude);
+    }//end method
+    
 }//end class
