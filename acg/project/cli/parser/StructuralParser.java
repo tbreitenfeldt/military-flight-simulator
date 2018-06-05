@@ -21,7 +21,7 @@ public class StructuralParser extends Parser {
     public void parseCommand(String cmd) throws ParseException {
     	List<Identifier> idList = new ArrayList<Identifier>();
     	Scanner cmdScanner = new Scanner(cmd);
-        String token = "";
+        String token = ""; 
         
         if ( !cmdScanner.hasNext()) {
             throw new ParseException("Command given is empty");
