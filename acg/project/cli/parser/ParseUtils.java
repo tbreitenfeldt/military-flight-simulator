@@ -175,5 +175,5 @@ public class ParseUtils {
         
         return new Altitude(altitude);
     }//end method
-    
+
 }//end class

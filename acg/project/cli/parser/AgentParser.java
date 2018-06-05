@@ -1,10 +1,12 @@
 package acg.project.cli.parser;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.NoSuchElementException;
 
 import acg.project.action.ActionSet;
-import acg.project.action.command.A_Command;
+import acg.project.action.command.ParameterAssignment;
 import acg.project.action.command.creational.create.*;
 import acg.architecture.datatype.*;
 
@@ -320,9 +322,159 @@ public class AgentParser extends Parser {
         return new CommandCreationalCreateTanker(idAgentTanker, idTemplateTanker, idAgentBoom, coordinates, altitude,
                 heading, speed);
     }//end method
-
+    
     private CommandCreationalCreateFighter createCommandFighter(String cmd) throws ParseException {
-        return null;
+        Identifier idAgentFighter = null;
+        Identifier idTemplateFighter = null;
+        Identifier idAgentOLS = null;
+        Identifier idAgentBoom = null;
+        Identifier idAgentTailhook = null;
+        List<Identifier> idAgentTanks = new ArrayList<>();
+        List<ParameterAssignment> parameters = new ArrayList<>();
+        CoordinateWorld coordinates = null;
+        Altitude altitude = null;
+        AngleNavigational heading = null;
+        Speed speed = null;
+        boolean isAirborn = false;
+        String token = null;
+        Scanner cmdScanner = new Scanner(cmd);
+        
+        try {
+            token = cmdScanner.next(); //create 
+            token += " " + cmdScanner.next();  //Fighter
+            
+            if (token.equalsIgnoreCase("create fighter")) {
+                throw new ParseException("Invalid create fighter command");
+            }//end if
+            
+            token = cmdScanner.next();  //Fighter agent ID
+            idAgentFighter = ParseUtils.parseID(token);
+            
+            if ( !cmdScanner.next().equalsIgnoreCase("from")) {
+                throw new ParseException("Invalid create Fighter command, expects \"from\"");
+            }//end if
+            
+            token = cmdScanner .next();  //Fighter template id
+            idTemplateFighter = ParseUtils.parseID(token);
+            
+            if ( !cmdScanner.next().equalsIgnoreCase("with")) {
+                throw new ParseException("Invalid create Fighter command, expects \"with\"");
+            }//end if
+            
+            if ( !cmdScanner.next().equalsIgnoreCase("ols")) {
+                throw new ParseException("Invalid create Fighter command, expects \"ols\"");
+            }//end if
+            
+            token = cmdScanner.next();  //ols agent id
+            idAgentOLS = ParseUtils.parseID(token);
+            
+            if ( !cmdScanner.next().equalsIgnoreCase("boom")) {
+                throw new ParseException("Invalid create Fighter command, expects \"boom\"");
+            }//end if
+            
+            token = cmdScanner.next();  //boom
+            idAgentBoom = ParseUtils.parseID(token);
+            
+            if ( !cmdScanner.next().equalsIgnoreCase("tailhook")) {
+                throw new ParseException("Invalid create Fighter command, expects \"tailhook\"");
+            }//end if
+            
+            token = cmdScanner.next();  //tailhook
+            idAgentTailhook = ParseUtils.parseID(token);
+            
+            if (cmdScanner.next().equalsIgnoreCase("tanks")) {
+                token = cmdScanner.next();
+                
+                //stop adding tank ids to the list if the next token is overriding, "at", or the last in the stanner
+                while ( !token.equalsIgnoreCase("overriding") && !token.equalsIgnoreCase("at") && cmdScanner.hasNext()) {
+                    Identifier temp = ParseUtils.parseID(token );
+                    
+                    idAgentTanks.add(temp);
+                    token = cmdScanner.next();
+                }//end while loop
+                
+                //check if the argument tanks was given, but no tank ids 
+                if (idAgentTanks.isEmpty()) {
+                    throw new ParseException("If you include the \"tanks\" argument, you must include at least 1 auxiliary fuel tank agent id");
+                }//end if
+            }//end if
+            
+            //token is already pointing at the next value in the command
+            if (token.equalsIgnoreCase("overriding")) {
+                token = cmdScanner.next();
+                
+                while ( !token.equalsIgnoreCase("at") && cmdScanner.hasNext()) {
+                    Identifier name = ParseUtils.parseID(token);
+                    String value = "";
+                    
+                    if ( !cmdScanner.next().equalsIgnoreCase("with")) {
+                        throw new ParseException("Invalid create fighter command, expects \"with\" in overrides");
+                    }//end if
+                    
+                    value = cmdScanner.next();
+                    
+                    parameters.add(new ParameterAssignment(name, value));
+                    token = cmdScanner.next();
+                }//end while loop
+                
+                if (parameters.isEmpty()) {
+                    throw new ParseException("If you include the \"overrides\" argument, you must include at least 1 parameter assignment");
+                }//end if
+            }//end if
+            
+            //token is already pointing at the next value in the command
+            if (token.equalsIgnoreCase("at")) {
+                isAirborn = true;  //mark that the fighter is airborn, so must include coordinates, altitude, heading, and speed
+            }//end if
+            
+            if (isAirborn) {
+                if ( !cmdScanner.next().equalsIgnoreCase("coordinates")) {
+                    throw new ParseException("Invalid create fighter command, expecting \"coordinates\"");
+                }//end if
+                
+                token = cmdScanner.next();
+                coordinates = ParseUtils.parseCOORDINATES(token);
+                
+                if ( !cmdScanner.next().equalsIgnoreCase("altitude")) {
+                    throw new ParseException("Invalid create fighter command, expects \"altitude\"");
+                }//end if
+                
+                token = cmdScanner.next();  //altitude 
+                altitude = ParseUtils.parseALTITUDE(token);
+                
+                if ( !cmdScanner.next().equalsIgnoreCase("heading")) {
+                    throw new ParseException("Invalid create fighter command, expects \"heading\"");
+                }//end if
+                
+                token = cmdScanner.next();  //course
+                heading = ParseUtils.parseAZIMUTH(token);
+                
+                if ( !token.equalsIgnoreCase("speed")) {
+                    throw new ParseException("Invalid create fighter command, expects \"speed\"");
+                }//end if 
+                
+                token = cmdScanner.next();  //speed
+                speed = ParseUtils.parseSPEED(token);
+            }//end if
+            
+            if (cmdScanner.hasNext()) {
+                throw new ParseException("Correct command, but accessive sintax");
+            }//end if
+            
+        } catch(ParseException pe) {
+            throw pe;
+        } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            throw new ParseException("Incomplete command.");
+        }//end catch
+        
+        cmdScanner.close();
+        
+        if (isAirborn) {
+            return new CommandCreationalCreateFighter(idAgentFighter, idTemplateFighter, idAgentOLS, idAgentBoom, idAgentTailhook, idAgentTanks, parameters,
+                    coordinates, altitude, heading, speed);
+        }//end if
+        
+        return new CommandCreationalCreateFighter(idAgentFighter, idTemplateFighter, idAgentOLS, idAgentBoom, idAgentTailhook, idAgentTanks, parameters);
     }//end method
 
 }//end class
