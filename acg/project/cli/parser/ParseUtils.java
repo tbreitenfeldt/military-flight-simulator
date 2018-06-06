@@ -8,29 +8,42 @@ import acg.architecture.datatype.*;
 
 
 public class ParseUtils {
-
-    public static Identifier parseID(String token) throws ParseException {
-        
-        if (token.length() == 0)
+	
+    public static Acceleration parseACCELERATION(String token) throws ParseException {
+    	
+        if (token.contains("-") || token.contains("+"))
             throw new ParseException();
         
-        if (token.matches("^[a-zA-Z0-9_]+$")) // id's are alphanumeric, plus underscore
-            return new Identifier(token);
+        Double acceleration;
+        try {
+        	acceleration = Double.parseDouble(token);
+        }
+        catch (Exception e) {
+        	throw new ParseException();
+        }
         
-        else
-            throw new ParseException();
-        
+        return new Acceleration(acceleration);
     }//end method
     
-    public static CoordinateCartesianRelative parseORIGIN(String token) {
+    public static Altitude parseALTITUDE(String token) throws ParseException {
+        double altitude = 0.0;
         
-        String tokenLeft = token.substring(0, token.indexOf(":"));
-        String tokenRight = token.substring(token.indexOf(":")+1, token.length());
+        if (token.isEmpty()) {
+            throw new ParseException("Token can not be empty");
+        }//end if
         
-        Double doubleLeft = Double.parseDouble(tokenLeft);
-        Double doubleRight = Double.parseDouble(tokenRight);
+        try {
+            altitude = Double.parseDouble(token);
+            
+            if (altitude < 0) {
+                throw new ParseException("Invalid altitude, it must be greater or equal to 0.0");
+            }//end if
+            
+        } catch(NumberFormatException nfe) {
+            throw new ParseException("Invalid altitude");
+        }//end catch
         
-        return new CoordinateCartesianRelative(doubleLeft, doubleRight);
+        return new Altitude(altitude);
     }//end method
     
     public static AngleNavigational parseAZIMUTH(String token) throws ParseException {
@@ -44,49 +57,6 @@ public class ParseUtils {
             return new AngleNavigational(angle);
         
         throw new ParseException();
-    }//end method
-    
-    public static Distance parseDISTANCE(String token) throws ParseException {
-        
-        if (token.contains("-") || token.contains("+"))
-            throw new ParseException();
-        
-        Double distance = Double.parseDouble(token);
-        
-        return new Distance(distance);
-    }//end method
-    
-    public static Weight parseWEIGHT(String token) throws ParseException {
-        
-        if (token.contains("-") || token.contains("+"))
-            throw new ParseException();
-        
-        Integer weight = Integer.parseInt(token);
-        
-        return new Weight(weight);
-    }//end method
-    
-    public static Speed parseSPEED(String token) throws ParseException {
-        
-        if (token.contains("-") || token.contains("+"))
-            throw new ParseException();
-        
-        Integer speed = Integer.parseInt(token);
-        
-        return new Speed(speed);
-    }//end method
-    
-    public static Percent parsePERCENT(String token) throws ParseException {
-        
-        if (token.contains("-") || token.contains("+"))
-            throw new ParseException();
-        
-        Integer percent = Integer.parseInt(token);
-        
-        if (percent < 0 || percent > 100)
-            throw new ParseException();
-        
-        return new Percent(percent);
     }//end method
     
     public static CoordinateWorld parseCOORDINATES(String token) throws ParseException {
@@ -155,25 +125,103 @@ public class ParseUtils {
         return new CoordinateWorld(laditude, longitude);
     }//end method
     
-    public static Altitude parseALTITUDE(String token) throws ParseException {
-        double altitude = 0.0;
+    public static Distance parseDISTANCE(String token) throws ParseException {
         
-        if (token.isEmpty()) {
-            throw new ParseException("Token can not be empty");
-        }//end if
+        if (token.contains("-") || token.contains("+"))
+            throw new ParseException();
         
+        Double distance;
         try {
-            altitude = Double.parseDouble(token);
-            
-            if (altitude < 0) {
-                throw new ParseException("Invalid altitude, it must be greater or equal to 0.0");
-            }//end if
-            
-        } catch(NumberFormatException nfe) {
-            throw new ParseException("Invalid altitude");
-        }//end catch
+            distance = Double.parseDouble(token);
+        }
+        catch (Exception e) {
+        	throw new ParseException();
+        }
         
-        return new Altitude(altitude);
+        return new Distance(distance);
+    }//end method
+    
+    public static AttitudePitch parseELEVATION(String token) throws ParseException {
+    	
+        if (token.contains("-") || token.contains("+"))
+            throw new ParseException();
+        
+        Double elevation;
+        try {
+        	elevation = Double.parseDouble(token);
+        }
+        catch (Exception e) {
+        	throw new ParseException();
+        }
+        
+        return new AttitudePitch(elevation);
+        
+    }//end method
+    
+    public static Flow parseFLOW(String token) throws ParseException {
+    	
+        if (token.contains("-") || token.contains("+"))
+            throw new ParseException();
+        
+        Double flow;
+        try {
+        	flow = Double.parseDouble(token);
+        }
+        catch (Exception e) {
+        	throw new ParseException();
+        }
+        
+        return new Flow(flow);
+        
+    }//end method
+    
+    public static Identifier parseID(String token) throws ParseException {
+        
+        if (token.length() == 0)
+            throw new ParseException();
+        
+        if (token.matches("^[a-zA-Z0-9_]+$")) // id's are alphanumeric, plus underscore
+            return new Identifier(token);
+        
+        else
+            throw new ParseException();
+        
+    }//end method
+    
+    public static Latitude parseLATITUDE(String token) throws ParseException {
+    	
+    	return null;
+    }//end method
+    
+    public static Longitude parseLONGITUDE(String token) throws ParseException {
+    	
+    	return null;
+    }//end method
+    
+    public static CoordinateCartesianRelative parseORIGIN(String token) {
+        
+        String tokenLeft = token.substring(0, token.indexOf(":"));
+        String tokenRight = token.substring(token.indexOf(":")+1, token.length());
+        
+        Double doubleLeft = Double.parseDouble(tokenLeft);
+        Double doubleRight = Double.parseDouble(tokenRight);
+        
+        return new CoordinateCartesianRelative(doubleLeft, doubleRight);
+        
+    }//end method
+    
+    public static Percent parsePERCENT(String token) throws ParseException {
+        
+        if (token.contains("-") || token.contains("+"))
+            throw new ParseException();
+        
+        Integer percent = Integer.parseInt(token);
+        
+        if (percent < 0 || percent > 100)
+            throw new ParseException();
+        
+        return new Percent(percent);
+        
     }//end method
     
     public static AngleNavigational parseCOURSE(String token) throws ParseException {
@@ -214,6 +262,62 @@ public class ParseUtils {
         }//end catch
         
         return new Rate(rate);
+    }//end method
+    
+    public static Speed parseSPEED(String token) throws ParseException {
+        
+        if (token.contains("-") || token.contains("+"))
+            throw new ParseException();
+        
+        Integer speed = Integer.parseInt(token);
+        
+        return new Speed(speed);
+        
+    }//end method
+    
+    public static String parseSTRING(String token) throws ParseException {
+    	
+    	if (token instanceof String)
+    		return new String(token);
+    	
+    	else
+    		throw new ParseException();
+    }//end method
+    
+    public static Time parseTIME(String token) throws ParseException {
+    	
+        if (token.contains("-") || token.contains("+"))
+            throw new ParseException();
+        
+        Double time;
+        try {
+        	time = Double.parseDouble(token);
+        }
+        catch (Exception e) {
+        	throw new ParseException();
+        }
+        
+        if (time >= 0 && time < 60)
+        	return new Time(time);
+        
+        else
+        	throw new ParseException();
+    }//end method
+    
+    public static Weight parseWEIGHT(String token) throws ParseException {
+        
+        if (token.contains("-") || token.contains("+"))
+            throw new ParseException();
+        
+        Integer weight = 0;
+        
+        try {
+            weight = Integer.parseInt(token);
+        } catch(NumberFormatException nfe) {
+            throw new ParseException();
+        }//end catch
+        
+        return new Weight(weight);
     }//end method
     
 }//end class
