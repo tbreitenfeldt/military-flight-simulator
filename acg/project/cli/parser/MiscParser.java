@@ -22,7 +22,8 @@ public class MiscParser extends Parser {
         
         if ( !cmdScanner.hasNext()) {
             cmdScanner.close();
-            throw new ParseException("Command given is empty");
+                cmdScanner.close();
+                throw new ParseException("Command given is empty");
         }//end if
         
         token = cmdScanner.next();
@@ -45,6 +46,7 @@ public class MiscParser extends Parser {
                     theCommand = miscellaneousCommandUpdateClock(token);
                     this.actionSet.getActionMisc().submit((CommandMiscDoClockUpdate) theCommand);
                 } else {
+                    cmdScanner.close();
                     throw new ParseException("Invalid argument for clock");
                 }//end else
             }//end else
@@ -56,6 +58,7 @@ public class MiscParser extends Parser {
             theCommand = miscellaneousCommandWait(token);
             this.actionSet.getActionMisc().submit((CommandMiscDoWait) theCommand);
         } else {
+            cmdScanner.close();
             throw new ParseException("Invalid command");
         }//end else
         
@@ -71,9 +74,11 @@ public class MiscParser extends Parser {
             token = cmdScanner.next();
             
             if ( !token.equalsIgnoreCase("@clock")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid command");
             }//end if
             if ( !cmdScanner.hasNextInt()) {
+                cmdScanner.close();
                 throw new ParseException("Invalid @clock command, expects an integer");
             }//end if
             
@@ -81,12 +86,14 @@ public class MiscParser extends Parser {
             rate = ParseUtils.parseRATE(token);
             
             if (cmdScanner.hasNext()) {
+                cmdScanner.close();
                 throw new ParseException("Correct command, but accessive sintax");
             }//end if
             
         } catch(ParseException pe) {
             throw pe;
         } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            cmdScanner.close();
             throw new ParseException("Incomplete command.");
         }//end catch
         
@@ -112,6 +119,7 @@ public class MiscParser extends Parser {
             token = cmdScanner.next();
             
             if ( !cmdScanner.next().equalsIgnoreCase("@clock")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid command");
             }//end if
             
@@ -122,16 +130,19 @@ public class MiscParser extends Parser {
             } else if (token.equalsIgnoreCase("resume")) {
                 isRunning = true;
             } else {
+                cmdScanner.close();
                 throw new ParseException("Invalid @clock command, expects \"pause\" or \"resume\"");
             }//end else 
             
             if (cmdScanner.hasNext()) {
+                cmdScanner.close();
                 throw new ParseException("Correct command, but accessive sintax");
             }//end if
             
         } catch(ParseException pe) {
             throw pe;
         } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            cmdScanner.close();
             throw new ParseException("Incomplete command.");
         }//end catch
         
@@ -145,19 +156,23 @@ public class MiscParser extends Parser {
         
         try {
             if ( !cmdScanner.next().equalsIgnoreCase("@clock")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid command");
             }//end if
             if ( !cmdScanner.next().equalsIgnoreCase("update")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid @clock command, expects \"update\"");
             }//end if
             
             if (cmdScanner.hasNext()) {
+                cmdScanner.close();
                 throw new ParseException("Correct command, but accessive sintax");
             }//end if
             
         } catch(ParseException pe) {
             throw pe;
         } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            cmdScanner.close();
             throw new ParseException("Incomplete command.");
         }//end catch
         
@@ -172,6 +187,7 @@ public class MiscParser extends Parser {
         
         try {
             if ( !cmdScanner.next().equalsIgnoreCase("@clock")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid command");
             }//end if
             
@@ -180,12 +196,14 @@ public class MiscParser extends Parser {
             filename = cmdScanner.next();
             
             if (cmdScanner.hasNext()) {
+                cmdScanner.close();
                 throw new ParseException("Correct command, but accessive sintax");
             }//end if
             
         } catch(ParseException pe) {
             throw pe;
         } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            cmdScanner.close();
             throw new ParseException("Incomplete command.");
         }//end catch
         
@@ -203,9 +221,11 @@ public class MiscParser extends Parser {
             token = cmdScanner.next();
             
             if ( !token.equalsIgnoreCase("@wait")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid command");
             }//end if
             if ( !cmdScanner.hasNextInt()) {
+                cmdScanner.close();
                 throw new ParseException("Invalid @wait command, expects an integer");
             }//end if
             
@@ -213,12 +233,14 @@ public class MiscParser extends Parser {
             rate = ParseUtils.parseRATE(token);
             
             if (cmdScanner.hasNext()) {
+                cmdScanner.close();
                 throw new ParseException("Correct command, but accessive sintax");
             }//end if
             
         } catch(ParseException pe) {
             throw pe;
         } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            cmdScanner.close();
             throw new ParseException("Incomplete command.");
         }//end catch
         

@@ -24,15 +24,18 @@ public class AgentParser extends Parser {
         A_CommandCreationalCreate theCommand = null;
         
         if ( !cmdScanner.hasNext()) {
+            cmdScanner.close();
             throw new ParseException("Command given is empty");
         }//end if
         
         token = cmdScanner.next();  //create
         
         if ( !token.equalsIgnoreCase("create")) {
+            cmdScanner.close();
             throw new ParseException("Invalid command");
         }//end if
         if (!cmdScanner.hasNext()) {
+            cmdScanner.close();
             throw new ParseException("Invalid command");
         }//end if
         
@@ -55,6 +58,7 @@ public class AgentParser extends Parser {
             theCommand = createCommandFighter(cmd);
             this.actionSet.getActionCreationalCreate().submit((CommandCreationalCreateFighter) theCommand);
         } else {
+            cmdScanner.close();
             throw new ParseException("Invalid command");
         }//end else
         
@@ -79,6 +83,7 @@ public class AgentParser extends Parser {
             token += " " + cmdScanner.next();  //carrier
             
             if (token.equalsIgnoreCase("create carrier")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create carrier command");
             }//end if
             
@@ -86,6 +91,7 @@ public class AgentParser extends Parser {
             idAgentCarrier = ParseUtils.parseID(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("from")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create carrier command, expects \"from\"");
             }//end if
             
@@ -93,10 +99,12 @@ public class AgentParser extends Parser {
             idTemplateCarrier = ParseUtils.parseID(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("with")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create carrier command, expects \"with\"");
             }//end if
             
             if ( !cmdScanner.next().equalsIgnoreCase("catapult")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create carrier command, expects \"catapult\"");
             }//end if
             
@@ -104,6 +112,7 @@ public class AgentParser extends Parser {
             idAgentCatapult = ParseUtils.parseID(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("barrier")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create carrier command, expects \"barrier\"");
             }//end if
             
@@ -111,6 +120,7 @@ public class AgentParser extends Parser {
             idAgentBarrier = ParseUtils.parseID(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("trap")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create carrier command, expects \"trap\"");
             }//end if
             
@@ -118,6 +128,7 @@ public class AgentParser extends Parser {
             idAgentTrap = ParseUtils.parseID(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("ols")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create carrier command, expects \"ols\"");
             }//end end else
             
@@ -125,9 +136,11 @@ public class AgentParser extends Parser {
             idAgentOLS = ParseUtils.parseID(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("at")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create carrier command, expects \"at\"");
             }//end if
             if ( !cmdScanner.next().equalsIgnoreCase("coordinates")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create carrier command, expects \"at\"");
             }//end if
             
@@ -135,6 +148,7 @@ public class AgentParser extends Parser {
             coordinates = ParseUtils.parseCOORDINATES(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("heading")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create carrier command, expects \"heading\"");
             }//end if
             
@@ -142,6 +156,7 @@ public class AgentParser extends Parser {
             heading = ParseUtils.parseCOURSE(token);
             
             if ( !token.equalsIgnoreCase("speed")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create carrier command, expects \"speed\"");
             }//end if 
             
@@ -149,11 +164,13 @@ public class AgentParser extends Parser {
             speed = ParseUtils.parseSPEED(token);
             
             if (cmdScanner.hasNext()) {
+                cmdScanner.close();
                 throw new ParseException("Correct command, but accessive sintax");
             }//end if
         } catch(ParseException pe) {
             throw pe;
         } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            cmdScanner.close();
             throw new ParseException("Incomplete command.");
         }//end catch
         
@@ -174,6 +191,7 @@ public class AgentParser extends Parser {
             token += " " + cmdScanner.next();
             
             if ( !token.equalsIgnoreCase("create tailhook")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create tailhook command");
             }//end if
             
@@ -181,6 +199,7 @@ public class AgentParser extends Parser {
             idAgent = ParseUtils.parseID(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("from")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create tailhook command, expects \"from\"");
             }//end if
             
@@ -188,11 +207,13 @@ public class AgentParser extends Parser {
             idTemplate = ParseUtils.parseID(token);
             
             if (cmdScanner.hasNext()) {
+                cmdScanner.close();
                 throw new ParseException("Correct create tailhook command, but accessive sintax");
             }//end if
         } catch(ParseException pe) {
             throw pe;
         } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            cmdScanner.close();
             throw new ParseException("Incomplete command.");
         }//end catch
         
@@ -211,6 +232,7 @@ public class AgentParser extends Parser {
             token += " " + cmdScanner.next();
             
             if ( !token.equalsIgnoreCase("create ols_xmt")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create ols_xmt command");
             }//end if
             
@@ -218,6 +240,7 @@ public class AgentParser extends Parser {
             idAgent = ParseUtils.parseID(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("from")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create ols_xmt command, expects \"from\"");
             }//end if
             
@@ -225,11 +248,13 @@ public class AgentParser extends Parser {
             idTemplate = ParseUtils.parseID(token);
             
             if (cmdScanner.hasNext()) {
+                cmdScanner.close();
                 throw new ParseException("Correct create ols_xmt command, but accessive sintax");
             }//end if
         } catch(ParseException pe) {
             throw pe;
         } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            cmdScanner.close();
             throw new ParseException("Incomplete command.");
         }//end catch
         
@@ -253,6 +278,7 @@ public class AgentParser extends Parser {
             token += " " + cmdScanner.next();  //tanker
             
             if (token.equalsIgnoreCase("create tanker")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create tanker command");
             }//end if
             
@@ -260,6 +286,7 @@ public class AgentParser extends Parser {
             idAgentTanker = ParseUtils.parseID(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("from")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create tanker command, expects \"from\"");
             }//end if
             
@@ -267,10 +294,12 @@ public class AgentParser extends Parser {
             idTemplateTanker = ParseUtils.parseID(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("with")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create tanker command, expects \"with\"");
             }//end if
             
             if ( !cmdScanner.next().equalsIgnoreCase("boom")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create tanker command, expects \"boom\"");
             }//end if
             
@@ -278,9 +307,11 @@ public class AgentParser extends Parser {
             idAgentBoom = ParseUtils.parseID(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("at")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create tanker command, expects \"at\"");
             }//end if
             if ( !cmdScanner.next().equalsIgnoreCase("coordinates")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create tanker command, expects \"at\"");
             }//end if
             
@@ -288,6 +319,7 @@ public class AgentParser extends Parser {
             coordinates = ParseUtils.parseCOORDINATES(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("altitude")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create tanker command, expects \"altitude\"");
             }//end if
             
@@ -295,6 +327,7 @@ public class AgentParser extends Parser {
             altitude = ParseUtils.parseALTITUDE(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("heading")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create tanker command, expects \"heading\"");
             }//end if
             
@@ -302,6 +335,7 @@ public class AgentParser extends Parser {
             heading = ParseUtils.parseCOURSE(token);
             
             if ( !token.equalsIgnoreCase("speed")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create tanker command, expects \"speed\"");
             }//end if 
             
@@ -309,11 +343,13 @@ public class AgentParser extends Parser {
             speed = ParseUtils.parseSPEED(token);
             
             if (cmdScanner.hasNext()) {
+                cmdScanner.close();
                 throw new ParseException("Correct command, but accessive sintax");
             }//end if
         } catch(ParseException pe) {
             throw pe;
         } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            cmdScanner.close();
             throw new ParseException("Incomplete command.");
         }//end catch
         
@@ -344,6 +380,7 @@ public class AgentParser extends Parser {
             token += " " + cmdScanner.next();  //Fighter
             
             if (token.equalsIgnoreCase("create fighter")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create fighter command");
             }//end if
             
@@ -351,6 +388,7 @@ public class AgentParser extends Parser {
             idAgentFighter = ParseUtils.parseID(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("from")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create Fighter command, expects \"from\"");
             }//end if
             
@@ -358,10 +396,12 @@ public class AgentParser extends Parser {
             idTemplateFighter = ParseUtils.parseID(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("with")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create Fighter command, expects \"with\"");
             }//end if
             
             if ( !cmdScanner.next().equalsIgnoreCase("ols")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create Fighter command, expects \"ols\"");
             }//end if
             
@@ -369,6 +409,7 @@ public class AgentParser extends Parser {
             idAgentOLS = ParseUtils.parseID(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("boom")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create Fighter command, expects \"boom\"");
             }//end if
             
@@ -376,6 +417,7 @@ public class AgentParser extends Parser {
             idAgentBoom = ParseUtils.parseID(token);
             
             if ( !cmdScanner.next().equalsIgnoreCase("tailhook")) {
+                cmdScanner.close();
                 throw new ParseException("Invalid create Fighter command, expects \"tailhook\"");
             }//end if
             
@@ -395,7 +437,8 @@ public class AgentParser extends Parser {
                 
                 //check if the argument tanks was given, but no tank ids 
                 if (idAgentTanks.isEmpty()) {
-                    throw new ParseException("If you include the \"tanks\" argument, you must include at least 1 auxiliary fuel tank agent id");
+                    cmdScanner.close();
+                    throw new ParseException("If given \"tanks\" argument, at least 1 auxiliary fuel tank agent id is needed");
                 }//end if
             }//end if
             
@@ -408,6 +451,7 @@ public class AgentParser extends Parser {
                     String value = "";
                     
                     if ( !cmdScanner.next().equalsIgnoreCase("with")) {
+                        cmdScanner.close();
                         throw new ParseException("Invalid create fighter command, expects \"with\" in overrides");
                     }//end if
                     
@@ -418,7 +462,8 @@ public class AgentParser extends Parser {
                 }//end while loop
                 
                 if (parameters.isEmpty()) {
-                    throw new ParseException("If you include the \"overrides\" argument, you must include at least 1 parameter assignment");
+                    cmdScanner.close();
+                    throw new ParseException("If argument \"overrides\" is given, at least 1 parameter assignment is needed");
                 }//end if
             }//end if
             
@@ -429,6 +474,7 @@ public class AgentParser extends Parser {
             
             if (isAirborn) {
                 if ( !cmdScanner.next().equalsIgnoreCase("coordinates")) {
+                    cmdScanner.close();
                     throw new ParseException("Invalid create fighter command, expecting \"coordinates\"");
                 }//end if
                 
@@ -436,6 +482,7 @@ public class AgentParser extends Parser {
                 coordinates = ParseUtils.parseCOORDINATES(token);
                 
                 if ( !cmdScanner.next().equalsIgnoreCase("altitude")) {
+                    cmdScanner.close();
                     throw new ParseException("Invalid create fighter command, expects \"altitude\"");
                 }//end if
                 
@@ -443,6 +490,7 @@ public class AgentParser extends Parser {
                 altitude = ParseUtils.parseALTITUDE(token);
                 
                 if ( !cmdScanner.next().equalsIgnoreCase("heading")) {
+                    cmdScanner.close();
                     throw new ParseException("Invalid create fighter command, expects \"heading\"");
                 }//end if
                 
@@ -450,6 +498,7 @@ public class AgentParser extends Parser {
                 heading = ParseUtils.parseCOURSE(token);
                 
                 if ( !token.equalsIgnoreCase("speed")) {
+                    cmdScanner.close();
                     throw new ParseException("Invalid create fighter command, expects \"speed\"");
                 }//end if 
                 
@@ -458,20 +507,22 @@ public class AgentParser extends Parser {
             }//end if
             
             if (cmdScanner.hasNext()) {
+                cmdScanner.close();
                 throw new ParseException("Correct command, but accessive sintax");
             }//end if
             
         } catch(ParseException pe) {
             throw pe;
         } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            cmdScanner.close();
             throw new ParseException("Incomplete command.");
         }//end catch
         
         cmdScanner.close();
         
         if (isAirborn) {
-            return new CommandCreationalCreateFighter(idAgentFighter, idTemplateFighter, idAgentOLS, idAgentBoom, idAgentTailhook, idAgentTanks, parameters,
-                    coordinates, altitude, heading, speed);
+            return new CommandCreationalCreateFighter(idAgentFighter, idTemplateFighter, idAgentOLS, idAgentBoom, idAgentTailhook,
+                    idAgentTanks, parameters, coordinates, altitude, heading, speed);
         }//end if
         
         return new CommandCreationalCreateFighter(idAgentFighter, idTemplateFighter, idAgentOLS, idAgentBoom, idAgentTailhook, idAgentTanks, parameters);
