@@ -8,18 +8,18 @@ import acg.architecture.datatype.*;
 
 
 public class ParseUtils {
-	
+    
     public static Acceleration parseACCELERATION(String token) throws ParseException {
-    	
+        
         if (token.contains("-") || token.contains("+"))
             throw new ParseException();
         
         Double acceleration;
         try {
-        	acceleration = Double.parseDouble(token);
+            acceleration = Double.parseDouble(token);
         }
         catch (Exception e) {
-        	throw new ParseException();
+            throw new ParseException();
         }
         
         return new Acceleration(acceleration);
@@ -60,11 +60,8 @@ public class ParseUtils {
     }//end method
     
     public static CoordinateWorld parseCOORDINATES(String token) throws ParseException {
-        Latitude laditude = null;
+        Latitude latitude = null;
         Longitude longitude = null;
-        int degrees = 0;
-        int minutes = 0;
-        double seconds = 0.0;
         Scanner coordinateScanner = null;
         
         //Insure that the token is in the format int*int'decimal(with or with out .)"/int*int'decimal"
@@ -73,56 +70,47 @@ public class ParseUtils {
         }//end if
         
         coordinateScanner = new Scanner(token);
-        coordinateScanner.useDelimiter("[*\'\"/]");
+        coordinateScanner.useDelimiter("/");
         
         try {
-            degrees = coordinateScanner.nextInt();
+            token = coordinateScanner.next();
+            latitude = parseLATITUDE(token);
             
-            if (degrees < 0 || degrees > 90) {
-                throw new ParseException("Laditude degrees must be between 0 and 90 inclusive");
-            }//end if
-            
-            minutes = coordinateScanner.nextInt();
-            
-            if (minutes < 0 || minutes > 59) {
-                throw new ParseException("Laditude minutes must be in the range 0 to 59 inclusive");
-            }//end if
-            
-            seconds = coordinateScanner.nextDouble();
-            
-            if (seconds < 0 || seconds > 59) {
-                throw new ParseException("Laditude seconds must be in the range 0 to 59 inclusive");
-            }//end if
-            
-            laditude = new Latitude(degrees, minutes, seconds);
-            coordinateScanner.next();  //eat up blank space seperating laditude and longitude 
-            
-            degrees = coordinateScanner.nextInt();
-            
-            if (degrees < 0 || degrees > 180) {
-                throw new ParseException("Longitude degrees must be between 0 and 180 inclusive");
-            }//end if
-            
-            minutes = coordinateScanner.nextInt();
-            
-            if (minutes < 0 || minutes > 59) {
-                throw new ParseException("Longitude minutes must be in the range 0 to 59 inclusive");
-            }//end if
-        
-            seconds = coordinateScanner.nextDouble();
-            
-            if (seconds < 0 || seconds > 59) {
-                throw new ParseException("Longitude seconds must be in the range 0 to 59 inclusive");
-            }//end if
-            
-            longitude = new Longitude(degrees, minutes, seconds);
-        } catch(InputMismatchException ime) {  //catch exceptions for if nextInt or nextDouble are unable to parse correctly 
-            throw new ParseException("invalid format for coordinates");
+            token = coordinateScanner.next();
+            longitude = parseLONGITUDE(token);
+        } catch(ParseException pe) {
+            throw pe;        
         } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
             throw new ParseException("Invalid coordinates");
         }//end catch
         
-        return new CoordinateWorld(laditude, longitude);
+        return new CoordinateWorld(latitude, longitude);
+    }//end method
+    
+    public static AngleNavigational parseCOURSE(String token) throws ParseException {
+        if (token.isEmpty()) {
+            throw new ParseException("Token can not be empty");
+        }//end if
+        if (token.length() != 3) {
+            throw new ParseException("Course must be a 3 digit number");
+        }//end if
+        
+        double course = 0.0;
+        
+        try {
+            course = Double.parseDouble(token);
+            
+            if (course < 0) {
+                throw new ParseException("Course can not be less than 0");
+            }//end if
+            
+        } catch(ParseException pe) {
+            throw pe;
+        } catch(NumberFormatException nfe) {
+            throw new ParseException("Invalid course");
+        }//end catch
+        
+        return new AngleNavigational(course);
     }//end method
     
     public static Distance parseDISTANCE(String token) throws ParseException {
@@ -135,23 +123,23 @@ public class ParseUtils {
             distance = Double.parseDouble(token);
         }
         catch (Exception e) {
-        	throw new ParseException();
+            throw new ParseException();
         }
         
         return new Distance(distance);
     }//end method
     
     public static AttitudePitch parseELEVATION(String token) throws ParseException {
-    	
+        
         if (token.contains("-") || token.contains("+"))
             throw new ParseException();
         
         Double elevation;
         try {
-        	elevation = Double.parseDouble(token);
+            elevation = Double.parseDouble(token);
         }
         catch (Exception e) {
-        	throw new ParseException();
+            throw new ParseException();
         }
         
         return new AttitudePitch(elevation);
@@ -159,16 +147,16 @@ public class ParseUtils {
     }//end method
     
     public static Flow parseFLOW(String token) throws ParseException {
-    	
+        
         if (token.contains("-") || token.contains("+"))
             throw new ParseException();
         
         Double flow;
         try {
-        	flow = Double.parseDouble(token);
+            flow = Double.parseDouble(token);
         }
         catch (Exception e) {
-        	throw new ParseException();
+            throw new ParseException();
         }
         
         return new Flow(flow);
@@ -189,13 +177,82 @@ public class ParseUtils {
     }//end method
     
     public static Latitude parseLATITUDE(String token) throws ParseException {
-    	
-    	return null;
+        int degrees = 0;
+        int minutes = 0;
+        double seconds = 0.0;
+        Scanner latitudeScanner = new Scanner(token);
+        
+        latitudeScanner.useDelimiter("[\\*\'\"]"); 
+        
+        try {
+            degrees = latitudeScanner.nextInt();
+            
+            if (degrees < 0 || degrees > 90) {
+                throw new ParseException("Laditude degrees must be between 0 and 90 inclusive");
+            }//end if
+            
+            minutes = latitudeScanner.nextInt();
+            
+            if (minutes < 0 || minutes > 59) {
+                throw new ParseException("Laditude minutes must be in the range 0 to 59 inclusive");
+            }//end if
+            
+            seconds = latitudeScanner.nextDouble();
+            
+            if (seconds < 0 || seconds > 59) {
+                throw new ParseException("Laditude seconds must be in the range 0 to 59 inclusive");
+            }//end if
+        } catch(ParseException pe) {
+            throw pe;
+        } catch(InputMismatchException ime) {  //catch exceptions for if nextInt or nextDouble are unable to parse correctly 
+            throw new ParseException("invalid format for latitude");
+        } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            throw new ParseException("Invalid latitude");
+        }//end catch
+        
+        latitudeScanner.close();
+        
+        return new Latitude(degrees, minutes, seconds);
     }//end method
     
     public static Longitude parseLONGITUDE(String token) throws ParseException {
-    	
-    	return null;
+        int degrees = 0;
+        int minutes = 0;
+        double seconds = 0.0;
+        Scanner longitudeScanner = new Scanner(token);
+        
+        longitudeScanner.useDelimiter("[\\*\'\"]");
+        
+        try {
+            degrees = longitudeScanner.nextInt();
+            
+            if (degrees < 0 || degrees > 180) {
+                throw new ParseException("Longitude degrees must be between 0 and 180 inclusive");
+            }//end if
+            
+            minutes = longitudeScanner.nextInt();
+            
+            if (minutes < 0 || minutes > 59) {
+                throw new ParseException("Longitude minutes must be in the range 0 to 59 inclusive");
+            }//end if
+            
+            seconds = longitudeScanner.nextDouble();
+            
+            if (seconds < 0 || seconds > 59) {
+                throw new ParseException("Longitude seconds must be in the range 0 to 59 inclusive");
+            }//end if
+            
+        } catch(ParseException pe) {
+            throw pe;
+        } catch(InputMismatchException ime) {  //catch exceptions for if nextInt or nextDouble are unable to parse correctly 
+            throw new ParseException("invalid format for longitude");
+        } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            throw new ParseException("Invalid longitude");
+        }//end catch
+        
+        longitudeScanner.close();
+        
+        return new Longitude(degrees, minutes, seconds);
     }//end method
     
     public static CoordinateCartesianRelative parseORIGIN(String token) {
@@ -222,30 +279,6 @@ public class ParseUtils {
         
         return new Percent(percent);
         
-    }//end method
-    
-    public static AngleNavigational parseCOURSE(String token) throws ParseException {
-        if (token.isEmpty()) {
-            throw new ParseException("Token can not be empty");
-        }//end if
-        if (token.length() != 3) {
-            throw new ParseException("Course must be a 3 digit number");
-        }//end if
-        
-        double course = 0.0;
-        
-        try {
-            course = Double.parseDouble(token);
-            
-            if (course < 0) {
-                throw new ParseException("Course can not be less than 0");
-            }//end if
-            
-        } catch(NumberFormatException nfe) {
-            throw new ParseException("Invalid course");
-        }//end catch
-        
-        return new AngleNavigational(course);
     }//end method
     
     public static Rate parseRATE(String token) throws ParseException {
@@ -276,32 +309,32 @@ public class ParseUtils {
     }//end method
     
     public static String parseSTRING(String token) throws ParseException {
-    	
-    	if (token instanceof String)
-    		return new String(token);
-    	
-    	else
-    		throw new ParseException();
+        
+        if (token instanceof String)
+            return new String(token);
+        
+        else
+            throw new ParseException();
     }//end method
     
     public static Time parseTIME(String token) throws ParseException {
-    	
+        
         if (token.contains("-") || token.contains("+"))
             throw new ParseException();
         
         Double time;
         try {
-        	time = Double.parseDouble(token);
+            time = Double.parseDouble(token);
         }
         catch (Exception e) {
-        	throw new ParseException();
+            throw new ParseException();
         }
         
         if (time >= 0 && time < 60)
-        	return new Time(time);
+            return new Time(time);
         
         else
-        	throw new ParseException();
+            throw new ParseException();
     }//end method
     
     public static Weight parseWEIGHT(String token) throws ParseException {
