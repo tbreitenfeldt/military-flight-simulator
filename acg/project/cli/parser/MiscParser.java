@@ -96,25 +96,134 @@ public class MiscParser extends Parser {
     }//end method
     
     private CommandMiscDoShowClock miscellaneousCommandShowClock(String cmd) throws ParseException {
+        if ( !cmd.equalsIgnoreCase("@clock")) {
+            throw new ParseException("Invalid command");
+        }//end if
+        
         return new CommandMiscDoShowClock();
     }//end method
     
     private CommandMiscDoSetClockRunning miscellaneousCommandSetClockRunning(String cmd) throws ParseException {
         boolean isRunning = false;
+        String token = "";
+        Scanner cmdScanner = new Scanner(cmd);
+        
+        try {
+            token = cmdScanner.next();
+            
+            if ( !cmdScanner.next().equalsIgnoreCase("@clock")) {
+                throw new ParseException("Invalid command");
+            }//end if
+            
+            token = cmdScanner.next();
+            
+            if (token.equalsIgnoreCase("pause")) {
+                isRunning = false;
+            } else if (token.equalsIgnoreCase("resume")) {
+                isRunning = true;
+            } else {
+                throw new ParseException("Invalid @clock command, expects \"pause\" or \"resume\"");
+            }//end else 
+            
+            if (cmdScanner.hasNext()) {
+                throw new ParseException("Correct command, but accessive sintax");
+            }//end if
+            
+        } catch(ParseException pe) {
+            throw pe;
+        } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            throw new ParseException("Incomplete command.");
+        }//end catch
+        
+        cmdScanner.close();
+        
         return new CommandMiscDoSetClockRunning(isRunning);
     }//end method
     
     private CommandMiscDoClockUpdate miscellaneousCommandUpdateClock(String cmd) throws ParseException {
+        Scanner cmdScanner = new Scanner(cmd);
+        
+        try {
+            if ( !cmdScanner.next().equalsIgnoreCase("@clock")) {
+                throw new ParseException("Invalid command");
+            }//end if
+            if ( !cmdScanner.next().equalsIgnoreCase("update")) {
+                throw new ParseException("Invalid @clock command, expects \"update\"");
+            }//end if
+            
+            if (cmdScanner.hasNext()) {
+                throw new ParseException("Correct command, but accessive sintax");
+            }//end if
+            
+        } catch(ParseException pe) {
+            throw pe;
+        } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            throw new ParseException("Incomplete command.");
+        }//end catch
+        
+        cmdScanner.close();
+        
         return new CommandMiscDoClockUpdate();
     }//end method
     
     private CommandMiscDoRun miscellaneousCommandRun(String cmd) throws ParseException {
         String filename = "";
+        Scanner cmdScanner = new Scanner(cmd);
+        
+        try {
+            if ( !cmdScanner.next().equalsIgnoreCase("@clock")) {
+                throw new ParseException("Invalid command");
+            }//end if
+            
+            cmdScanner.useDelimiter("@clock");
+            
+            filename = cmdScanner.next();
+            
+            if (cmdScanner.hasNext()) {
+                throw new ParseException("Correct command, but accessive sintax");
+            }//end if
+            
+        } catch(ParseException pe) {
+            throw pe;
+        } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            throw new ParseException("Incomplete command.");
+        }//end catch
+        
+        cmdScanner.close();
+        
         return new CommandMiscDoRun(filename);
     }//end method
     
     private CommandMiscDoWait miscellaneousCommandWait(String cmd) throws ParseException {
         Rate rate = null;
+        String token = "";
+        Scanner cmdScanner = new Scanner(cmd);
+        
+        try {
+            token = cmdScanner.next();
+            
+            if ( !token.equalsIgnoreCase("@wait")) {
+                throw new ParseException("Invalid command");
+            }//end if
+            if ( !cmdScanner.hasNextInt()) {
+                throw new ParseException("Invalid @wait command, expects an integer");
+            }//end if
+            
+            token = cmdScanner.next();
+            rate = ParseUtils.parseRATE(token);
+            
+            if (cmdScanner.hasNext()) {
+                throw new ParseException("Correct command, but accessive sintax");
+            }//end if
+            
+        } catch(ParseException pe) {
+            throw pe;
+        } catch(NoSuchElementException nsee) {  //catch exceptions if there are no characters left in the scanner
+            throw new ParseException("Incomplete command.");
+        }//end catch
+        
+        cmdScanner.close();
+        
         return new CommandMiscDoWait(rate);
     }//end method
     
