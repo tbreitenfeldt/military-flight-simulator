@@ -139,7 +139,7 @@ public class AgentParser extends Parser {
             }//end if
             
             token = cmdScanner.next();
-            heading = ParseUtils.parseAZIMUTH(token);
+            heading = ParseUtils.parseCOURSE(token);
             
             if ( !token.equalsIgnoreCase("speed")) {
                 throw new ParseException("Invalid create carrier command, expects \"speed\"");
@@ -299,7 +299,7 @@ public class AgentParser extends Parser {
             }//end if
             
             token = cmdScanner.next();  //course
-            heading = ParseUtils.parseAZIMUTH(token);
+            heading = ParseUtils.parseCOURSE(token);
             
             if ( !token.equalsIgnoreCase("speed")) {
                 throw new ParseException("Invalid create tanker command, expects \"speed\"");
@@ -447,7 +447,7 @@ public class AgentParser extends Parser {
                 }//end if
                 
                 token = cmdScanner.next();  //course
-                heading = ParseUtils.parseAZIMUTH(token);
+                heading = ParseUtils.parseCOURSE(token);
                 
                 if ( !token.equalsIgnoreCase("speed")) {
                     throw new ParseException("Invalid create fighter command, expects \"speed\"");

@@ -175,5 +175,45 @@ public class ParseUtils {
         
         return new Altitude(altitude);
     }//end method
-
+    
+    public static AngleNavigational parseCOURSE(String token) throws ParseException {
+        if (token.isEmpty()) {
+            throw new ParseException("Token can not be empty");
+        }//end if
+        if (token.length() != 3) {
+            throw new ParseException("Course must be a 3 digit number");
+        }//end if
+        
+        double course = 0.0;
+        
+        try {
+            course = Double.parseDouble(token);
+            
+            if (course < 0) {
+                throw new ParseException("Course can not be less than 0");
+            }//end if
+            
+        } catch(NumberFormatException nfe) {
+            throw new ParseException("Invalid course");
+        }//end catch
+        
+        return new AngleNavigational(course);
+    }//end method
+    
+    public static Rate parseRATE(String token) throws ParseException {
+        if (token.isEmpty()) {
+            throw new ParseException("token can not be empty");
+        }//end if
+        
+        int rate = 0;
+        
+        try {
+            rate = Integer.parseInt(token);
+        } catch(NumberFormatException nfe) {
+            throw new ParseException("Invalid rate");
+        }//end catch
+        
+        return new Rate(rate);
+    }//end method
+    
 }//end class
