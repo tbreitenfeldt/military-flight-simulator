@@ -381,8 +381,14 @@ public class ParseUtils {
     
     public static String parseSTRING(String token) throws ParseException {
         
-        if (token instanceof String)
-            return new String(token);
+    	if (token.charAt(0) == '\'' && token.charAt(token.length()-1) == '\'') {
+    		if (token.length() <= 2)
+    			throw new ParseException();
+    		
+    		token = token.substring(1, token.length()-1);
+    		
+    		return token;
+    	}
         
         else
             throw new ParseException();
