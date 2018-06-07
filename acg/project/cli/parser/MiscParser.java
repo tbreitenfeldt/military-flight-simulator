@@ -200,7 +200,10 @@ public class MiscParser extends Parser {
     		token = cmd.substring(secondQuote+1);
     		
     		
-    		if (token.length() > 0) {
+    		cmdScanner.close();
+    		cmdScanner = new Scanner(token);
+    		
+    		if (cmdScanner.hasNext()) {
     			cmdScanner.close();
     			throw new ParseException();
     		}
