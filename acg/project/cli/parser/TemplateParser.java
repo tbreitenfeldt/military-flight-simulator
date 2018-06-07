@@ -71,8 +71,9 @@ public class TemplateParser extends Parser {
                         the_command = createCommand_DEFINE_BARRIER(cmd);
                 }
                 
-                if (the_command != null)
+                if (the_command != null) {
                 	this.actionSet.getActionCreationalDefine().submit((A_CommandCreationalDefine) the_command);
+                }
                 
             }
             
@@ -662,7 +663,6 @@ public class TemplateParser extends Parser {
         }
 	}
 	
-	
 	public CommandCreationalDefineBoomMale createCommand_DEFINE_BOOM_MALE(String cmd) throws ParseException {
 		
 		//DEFINE BOOM MALE <tid> LENGTH <distance> DIAMETER <distance> FLOW <flow>
@@ -722,7 +722,6 @@ public class TemplateParser extends Parser {
         }
 	}
 
-	
 	public CommandCreationalDefineBoomFemale createCommand_DEFINE_BOOM_FEMALE(String cmd) throws ParseException {
 		
 		// DEFINE BOOM FEMALE <tid> LENGTH <distance> DIAMETER <distance> ELEVATION <elevation>
@@ -792,7 +791,6 @@ public class TemplateParser extends Parser {
         }
 	}
 	
-	
 	public CommandCreationalDefineBarrier createCommand_DEFINE_BARRIER(String cmd) throws ParseException {
 		
 		// DEFINE BARRIER <tid> ORIGIN <origin> AZIMUTH <azimuth> WIDTH <distance> TIME <time>
@@ -859,7 +857,6 @@ public class TemplateParser extends Parser {
         }
 	}
 	
-    
 	public CommandCreationalShowTemplate createCommand_SHOW_TEMPLATE(String cmd) throws ParseException {
 		
     	// SHOW TEMPLATE <tid>
