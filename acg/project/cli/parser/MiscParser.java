@@ -186,12 +186,12 @@ public class MiscParser extends Parser {
         Scanner cmdScanner = new Scanner(cmd);
         
         try {
-            if ( !cmdScanner.next().equalsIgnoreCase("@clock")) {
+            if ( !cmdScanner.next().equalsIgnoreCase("@run")) {
                 cmdScanner.close();
                 throw new ParseException("Invalid command");
             }//end if
             
-            cmdScanner.useDelimiter("@clock");
+            cmdScanner.useDelimiter("@run");
             
             filename = cmdScanner.next();
             
