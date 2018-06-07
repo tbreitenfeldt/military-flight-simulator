@@ -209,6 +209,7 @@ public class BehavioralParser extends Parser {
             throw new ParseException("Invalid command");
         }//end else
         
+        
         cmdScanner.close();
     }
 	
