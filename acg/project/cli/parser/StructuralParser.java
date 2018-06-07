@@ -85,7 +85,6 @@ public class StructuralParser extends Parser {
             throw new ParseException("Invalid command");
         }//end else
         
-  
         cmdScanner.close();
     }
 	
