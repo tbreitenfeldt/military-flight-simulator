@@ -52,7 +52,7 @@ public class MiscParser extends Parser {
             }//end else
             
         } else if (token.equalsIgnoreCase("@run")) {
-            theCommand = miscellaneousCommandRun(token);
+            theCommand = miscellaneousCommandRun(cmd);
             this.actionSet.getActionMisc().submit((CommandMiscDoRun) theCommand);
         } else if (token.equalsIgnoreCase("@wait")) {
             theCommand = miscellaneousCommandWait(token);
@@ -182,7 +182,41 @@ public class MiscParser extends Parser {
     }//end method
     
     private CommandMiscDoRun miscellaneousCommandRun(String cmd) throws ParseException {
-        String filename = "";
+        
+    	String filename = "";
+    	Scanner cmdScanner = new Scanner(cmd);
+    	
+    	String token = cmdScanner.next();
+    	if (!token.equalsIgnoreCase("@RUN")) {
+    		cmdScanner.close();
+    		throw new ParseException();
+    	}
+    	
+    	try {
+    		int firstQuote = cmd.indexOf("'");
+    		int secondQuote = cmd.indexOf("'", firstQuote + 1);
+    		
+    		filename = cmd.substring(firstQuote + 1, secondQuote);
+    		token = cmd.substring(secondQuote+1);
+    		
+    		
+    		if (token.length() > 0) {
+    			cmdScanner.close();
+    			throw new ParseException();
+    		}
+    	}
+    	catch (Exception e) {
+    		cmdScanner.close();
+    		throw new ParseException();
+    	}
+    	cmdScanner.close();
+    	
+    	return new CommandMiscDoRun(filename);
+    	
+    	
+    	
+    	/* Old Implementation
+    	String filename = "";
         Scanner cmdScanner = new Scanner(cmd);
         
         try {
@@ -210,6 +244,7 @@ public class MiscParser extends Parser {
         cmdScanner.close();
         
         return new CommandMiscDoRun(filename);
+        */
     }//end method
     
     private CommandMiscDoWait miscellaneousCommandWait(String cmd) throws ParseException {
