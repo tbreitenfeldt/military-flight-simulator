@@ -102,57 +102,74 @@ public class TemplateParser extends Parser {
             
         	token = cmdScanner.next(); // DEFINE
         	token += " " + cmdScanner.next(); // TRAP
-        	if(!token.equalsIgnoreCase("DEFINE TRAP"))
+        	if(!token.equalsIgnoreCase("DEFINE TRAP")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
             token = cmdScanner.next(); // <tid>
             Identifier tid = ParseUtils.parseID(token);
             
             token = cmdScanner.next(); // ORIGIN
-            if (!token.equalsIgnoreCase("ORIGIN"))
+            if (!token.equalsIgnoreCase("ORIGIN")) {
+            	cmdScanner.close();
             	throw new ParseException();
+            }
             
             token = cmdScanner.next(); // <origin>
             CoordinateCartesianRelative origin = ParseUtils.parseORIGIN(token);
             
             token = cmdScanner.next(); // AZIMUTH
-            if (!token.equalsIgnoreCase("AZIMUTH"))
+            if (!token.equalsIgnoreCase("AZIMUTH")) {
+            	cmdScanner.close();
             	throw new ParseException();
+            }
             
             token = cmdScanner.next(); // <azimuth>
             AngleNavigational azimuth = ParseUtils.parseAZIMUTH(token);
             
             token = cmdScanner.next(); // WIDTH
-            if (!token.equalsIgnoreCase("WIDTH"))
+            if (!token.equalsIgnoreCase("WIDTH")) {
+            	cmdScanner.close();
             	throw new ParseException();
+            }
             
             token = cmdScanner.next(); // <width>
             Distance width = ParseUtils.parseDISTANCE(token);
             
             token = cmdScanner.next(); // LIMIT
             token += " " + cmdScanner.next(); // WEIGHT
-            if (!token.equalsIgnoreCase("LIMIT WEIGHT"))
+            if (!token.equalsIgnoreCase("LIMIT WEIGHT")) {
+            	cmdScanner.close();
             	throw new ParseException();
+            }
             
             token = cmdScanner.next(); // <weight>
             Weight weight = ParseUtils.parseWEIGHT(token);
             
             token = cmdScanner.next(); // SPEED
-            if (!token.equalsIgnoreCase("SPEED"))
+            if (!token.equalsIgnoreCase("SPEED")) {
+            	cmdScanner.close();
             	throw new ParseException();
+            }
             
             token = cmdScanner.next(); // <speed>
             Speed speed = ParseUtils.parseSPEED(token);
             
             token = cmdScanner.next(); // MISS
-            if (!token.equalsIgnoreCase("MISS"))
+            if (!token.equalsIgnoreCase("MISS")) {
+            	cmdScanner.close();
             	throw new ParseException();
+            }
             
             token = cmdScanner.next(); // <percent>
             Percent percent = ParseUtils.parsePERCENT(token);
             
-            if (cmdScanner.hasNext()) // there should be nothing left in the command text
+            if (cmdScanner.hasNext()) { // there should be nothing left in the command text
+            	cmdScanner.close();
             	throw new ParseException();
+            }
+            cmdScanner.close();
             
             return new CommandCreationalDefineTrap (tid, origin, azimuth, width, weight, speed, percent);
         }
@@ -172,64 +189,83 @@ public class TemplateParser extends Parser {
         try {
         	token = cmdScanner.next(); // DEFINE
         	token += " " + cmdScanner.next(); // CATAPULT
-        	if (!token.equalsIgnoreCase("DEFINE CATAPULT"))
+        	if (!token.equalsIgnoreCase("DEFINE CATAPULT")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <tid>
         	Identifier tid = ParseUtils.parseID(token);
         	
         	token = cmdScanner.next(); // ORIGIN
-        	if (!token.equalsIgnoreCase("ORIGIN"))
+        	if (!token.equalsIgnoreCase("ORIGIN")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <origin>
         	CoordinateCartesianRelative origin = ParseUtils.parseORIGIN(token);
         	
         	token = cmdScanner.next(); // AZIMUTH
-        	if (!token.equalsIgnoreCase("AZIMUTH"))
+        	if (!token.equalsIgnoreCase("AZIMUTH")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <azimuth>
         	AngleNavigational azimuth = ParseUtils.parseAZIMUTH(token);
         	
         	token = cmdScanner.next(); // LENGTH
-        	if(!token.equalsIgnoreCase("LENGTH"))
+        	if(!token.equalsIgnoreCase("LENGTH")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <distance>
         	Distance distance = ParseUtils.parseDISTANCE(token);
         	
         	token = cmdScanner.next(); // ACCELERATION
-        	if (!token.equalsIgnoreCase("ACCELERATION"))
+        	if (!token.equalsIgnoreCase("ACCELERATION")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <acceleration>
         	Acceleration acceleration = ParseUtils.parseACCELERATION(token);
         	
         	token = cmdScanner.next(); // LIMIT
         	token += " " + cmdScanner.next(); // WEIGHT
-        	if (!token.equalsIgnoreCase("LIMIT WEIGHT"))
+        	if (!token.equalsIgnoreCase("LIMIT WEIGHT")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <weight>
         	Weight weight = ParseUtils.parseWEIGHT(token);
         	
         	token = cmdScanner.next(); // SPEED
-        	if (!token.equalsIgnoreCase("SPEED"))
+        	if (!token.equalsIgnoreCase("SPEED")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <speed>
         	Speed speed = ParseUtils.parseSPEED(token);
         	
         	token = cmdScanner.next(); // RESET
-        	if (!token.equalsIgnoreCase("RESET"))
+        	if (!token.equalsIgnoreCase("RESET")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <time>
         	Time time = ParseUtils.parseTIME(token);
         	
-        	if (cmdScanner.hasNext())
+        	if (cmdScanner.hasNext()) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
+        	cmdScanner.close();
         	
         	return new CommandCreationalDefineCatapult(tid, origin, azimuth, distance, acceleration, weight, speed, time);
         }
@@ -248,49 +284,64 @@ public class TemplateParser extends Parser {
         try {
         	token = cmdScanner.next(); // DEFINE
         	token += " " + cmdScanner.next(); // OLS_XMT
-        	if (!token.equalsIgnoreCase("DEFINE OLS_XMT"))
+        	if (!token.equalsIgnoreCase("DEFINE OLS_XMT")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <tid>
         	Identifier tid = ParseUtils.parseID(token);
         	
         	token = cmdScanner.next(); // ORIGIN
-        	if (!token.equalsIgnoreCase("ORIGIN"))
+        	if (!token.equalsIgnoreCase("ORIGIN")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <origin>
         	CoordinateCartesianRelative origin = ParseUtils.parseORIGIN(token);
         	
         	token = cmdScanner.next(); // AZIMUTH
-        	if (!token.equalsIgnoreCase("AZIMUTH"))
+        	if (!token.equalsIgnoreCase("AZIMUTH")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <azimuth>
         	AngleNavigational azimuth = ParseUtils.parseAZIMUTH(token);
         	
         	token = cmdScanner.next(); // ELEVATION
-        	if (!token.equalsIgnoreCase("ELEVATION"))
+        	if (!token.equalsIgnoreCase("ELEVATION")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <elevation>
         	AttitudePitch elevation = ParseUtils.parseELEVATION(token);
         	
         	token = cmdScanner.next(); // RANGE
-        	if (!token.equalsIgnoreCase("RANGE"))
+        	if (!token.equalsIgnoreCase("RANGE")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <distance>
         	Distance range = ParseUtils.parseDISTANCE(token);
         	
         	token = cmdScanner.next(); // DIAMETER
-        	if (!token.equalsIgnoreCase("DIAMETER"))
+        	if (!token.equalsIgnoreCase("DIAMETER")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <distance>
         	Distance diameter = ParseUtils.parseDISTANCE(token);
         	
-        	if (cmdScanner.hasNext())
+        	if (cmdScanner.hasNext()) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
+        	cmdScanner.close();
         	
         	return new CommandCreationalDefineOLSTransmitter(tid, origin, azimuth, elevation, range, diameter);
         }
@@ -309,51 +360,66 @@ public class TemplateParser extends Parser {
         try {
         	token = cmdScanner.next(); // DEFINE
         	token += " " + cmdScanner.next(); // CARRIER
-        	if (!token.equalsIgnoreCase("DEFINE CARRIER"))
+        	if (!token.equalsIgnoreCase("DEFINE CARRIER")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <tid>
         	Identifier tid = ParseUtils.parseID(token);
         	
         	token = cmdScanner.next(); // SPEED
         	token += " " + cmdScanner.next(); // MAX
-        	if (!token.equalsIgnoreCase("SPEED MAX"))
+        	if (!token.equalsIgnoreCase("SPEED MAX")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <speed>
         	Speed speedMax = ParseUtils.parseSPEED(token);
         	
         	token = cmdScanner.next(); // DELTA
         	token += " " + cmdScanner.next(); // INCREASE
-        	if (!token.equalsIgnoreCase("DELTA INCREASE"))
+        	if (!token.equalsIgnoreCase("DELTA INCREASE")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <speed>
         	Speed dInc = ParseUtils.parseSPEED(token);
         	
         	token = cmdScanner.next(); // DECREASE
-        	if (!token.equalsIgnoreCase("INCREASE"))
+        	if (!token.equalsIgnoreCase("INCREASE")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <speed>
         	Speed dDec = ParseUtils.parseSPEED(token);
         	
         	token = cmdScanner.next(); // TURN
-        	if (!token.equalsIgnoreCase("TURN"))
+        	if (!token.equalsIgnoreCase("TURN")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <azimuth>
         	AngleNavigational turn = ParseUtils.parseAZIMUTH(token);
         	
         	token = cmdScanner.next(); // LAYOUT
-        	if (!token.equalsIgnoreCase("LAYOUT"))
+        	if (!token.equalsIgnoreCase("LAYOUT")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <string>
         	String layout = ParseUtils.parseSTRING(token);
         	
-        	if (cmdScanner.hasNext())
+        	if (cmdScanner.hasNext()) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
+        	cmdScanner.close();
         	
         	return new CommandCreationalDefineCarrier(tid, speedMax, dInc, dDec, turn, layout);
         }
@@ -374,88 +440,113 @@ public class TemplateParser extends Parser {
         try {
         	token = cmdScanner.next(); // DEFINE
         	token += " " + cmdScanner.next(); // FIGHTER
-        	if (!token.equalsIgnoreCase("DEFINE FIGHTER"))
+        	if (!token.equalsIgnoreCase("DEFINE FIGHTER")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <tid>
         	Identifier tid = ParseUtils.parseID(token);
         	
         	token = cmdScanner.next(); // SPEED
         	token += " " + cmdScanner.next(); // MIN
-        	if (!token.equalsIgnoreCase("SPEED MIN"))
+        	if (!token.equalsIgnoreCase("SPEED MIN")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <speed>
         	Speed speedMin = ParseUtils.parseSPEED(token);
         	
         	token = cmdScanner.next(); // MAX
-        	if (!token.equalsIgnoreCase("MAX"))
+        	if (!token.equalsIgnoreCase("MAX")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <speed>
         	Speed speedMax = ParseUtils.parseSPEED(token);
         	
         	token = cmdScanner.next(); // DELTA
         	token += " " + cmdScanner.next(); // INCREASE
-        	if (!token.equalsIgnoreCase("DELTA INCREASE"))
+        	if (!token.equalsIgnoreCase("DELTA INCREASE")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <speed>
         	Speed dInc = ParseUtils.parseSPEED(token);
         	
         	token = cmdScanner.next(); // DECREASE
-        	if (!token.equalsIgnoreCase("DECREASE"))
+        	if (!token.equalsIgnoreCase("DECREASE")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <speed>
         	Speed dDec = ParseUtils.parseSPEED(token);
         	
         	token = cmdScanner.next(); // TURN
-        	if (!token.equalsIgnoreCase("TURN"))
+        	if (!token.equalsIgnoreCase("TURN")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <azimuth>
         	AngleNavigational turn = ParseUtils.parseAZIMUTH(token);
         	
         	token = cmdScanner.next(); // CLIMB
-        	if (!token.equalsIgnoreCase("CLIMB"))
+        	if (!token.equalsIgnoreCase("CLIMB")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <altitude>
         	Altitude climb = ParseUtils.parseALTITUDE(token);
         	
         	token = cmdScanner.next(); // DESCENT
-        	if (!token.equalsIgnoreCase("DESCENT"))
+        	if (!token.equalsIgnoreCase("DESCENT")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <altitude>
         	Altitude descent = ParseUtils.parseALTITUDE(token);
         	
         	token = cmdScanner.next(); // EMPTY
         	token += " " + cmdScanner.next(); // WEIGHT
-        	if (!token.equalsIgnoreCase("EMPTY WEIGHT"))
+        	if (!token.equalsIgnoreCase("EMPTY WEIGHT")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <weight>
         	Weight emptyWeight = ParseUtils.parseWEIGHT(token);
         	
         	token = cmdScanner.next(); // FUEL
         	token += " " + cmdScanner.next(); // INITIAL
-        	if (!token.equalsIgnoreCase("FUEL INITIAL"))
+        	if (!token.equalsIgnoreCase("FUEL INITIAL")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <weight>
         	Weight fuelInitial = ParseUtils.parseWEIGHT(token);
         	
         	token = cmdScanner.next(); // DELTA
-        	if (!token.equalsIgnoreCase("DELTA"))
+        	if (!token.equalsIgnoreCase("DELTA")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <weight>
         	Weight deltaWeight = ParseUtils.parseWEIGHT(token);
         	
-        	if (cmdScanner.hasNext())
+        	if (cmdScanner.hasNext()) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
+        	cmdScanner.close();
         	
         	return new CommandCreationalDefineFighter(tid, speedMin, speedMax, dInc, dDec, turn, climb, descent, emptyWeight, fuelInitial, deltaWeight);
         }
@@ -475,73 +566,94 @@ public class TemplateParser extends Parser {
         try {
         	token = cmdScanner.next(); // DEFINE
         	token += " " + cmdScanner.next(); // TANKER
-        	if (!token.equalsIgnoreCase("DEFINE TANKER"))
+        	if (!token.equalsIgnoreCase("DEFINE TANKER")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <tid>
         	Identifier tid = ParseUtils.parseID(token);
         	
         	token = cmdScanner.next(); // SPEED
         	token += " " + cmdScanner.next(); // MIN
-        	if (!token.equalsIgnoreCase("SPEED MIN"))
+        	if (!token.equalsIgnoreCase("SPEED MIN")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <speed>
         	Speed speedMin = ParseUtils.parseSPEED(token);
         	
         	token = cmdScanner.next(); // MAX
-        	if (!token.equalsIgnoreCase("MAX"))
+        	if (!token.equalsIgnoreCase("MAX")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <speed>
         	Speed speedMax = ParseUtils.parseSPEED(token);
         	
         	token = cmdScanner.next(); // DELTA
         	token += " " + cmdScanner.next(); // INCREASE
-        	if (!token.equalsIgnoreCase("DELTA INCREASE"))
+        	if (!token.equalsIgnoreCase("DELTA INCREASE")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <speed>
         	Speed dInc = ParseUtils.parseSPEED(token);
         	
         	token = cmdScanner.next(); // DECREASE
-        	if (!token.equalsIgnoreCase("DECREASE"))
+        	if (!token.equalsIgnoreCase("DECREASE")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <speed>
         	Speed dDec = ParseUtils.parseSPEED(token);
         	
         	token = cmdScanner.next(); // TURN
-        	if (!token.equalsIgnoreCase("TURN"))
+        	if (!token.equalsIgnoreCase("TURN")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <azimuth>
         	AngleNavigational turn = ParseUtils.parseAZIMUTH(token);
         	
         	token = cmdScanner.next(); // CLIMB
-        	if (!token.equalsIgnoreCase("CLIMB"))
+        	if (!token.equalsIgnoreCase("CLIMB")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <altitude>
         	Altitude climb = ParseUtils.parseALTITUDE(token);
         	
         	token = cmdScanner.next(); // DESCENT
-        	if (!token.equalsIgnoreCase("DESCENT"))
+        	if (!token.equalsIgnoreCase("DESCENT")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <altitude>
         	Altitude descent = ParseUtils.parseALTITUDE(token);
         	
         	token = cmdScanner.next(); // TANK
-        	if (!token.equalsIgnoreCase("TANK"))
+        	if (!token.equalsIgnoreCase("TANK")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <weight>
         	Weight tank = ParseUtils.parseWEIGHT(token);
         	
         	
-        	if (cmdScanner.hasNext())
+        	if (cmdScanner.hasNext()) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
+        	cmdScanner.close();
         	
         	return new CommandCreationalDefineTanker(tid, speedMin, speedMax, dInc, dDec, turn, climb, descent, tank);
         }
@@ -550,9 +662,10 @@ public class TemplateParser extends Parser {
         }
 	}
 	
+	
 	public CommandCreationalDefineBoomMale createCommand_DEFINE_BOOM_MALE(String cmd) throws ParseException {
 		
-		//DEFINE BOOM MALE <tid> LENGTH <distance> DIAMETER <distance> FLOW <weight>
+		//DEFINE BOOM MALE <tid> LENGTH <distance> DIAMETER <distance> FLOW <flow>
 		
         Scanner cmdScanner = new Scanner(cmd);
         String token = "";
@@ -561,35 +674,46 @@ public class TemplateParser extends Parser {
         	token = cmdScanner.next(); // DEFINE
         	token += " " + cmdScanner.next(); // BOOM
         	token += " " + cmdScanner.next(); // MALE
-        	if (!token.equalsIgnoreCase("DEFINE BOOM MALE"))
+        	if (!token.equalsIgnoreCase("DEFINE BOOM MALE")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <tid>
         	Identifier tid = ParseUtils.parseID(token);
         	
         	token = cmdScanner.next(); // LENGTH
-        	if (!token.equalsIgnoreCase("LENGTH"))
+        	if (!token.equalsIgnoreCase("LENGTH")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <distance>
         	Distance length = ParseUtils.parseDISTANCE(token);
         	
         	token = cmdScanner.next(); // DIAMETER
-        	if (!token.equalsIgnoreCase("DIAMETER"))
+        	if (!token.equalsIgnoreCase("DIAMETER")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <distance>
         	Distance diameter = ParseUtils.parseDISTANCE(token);
         	
         	token = cmdScanner.next(); // FLOW
-        	if (!token.equalsIgnoreCase("FLOW"))
+        	if (!token.equalsIgnoreCase("FLOW")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
-        	token = cmdScanner.next(); // <weight>
+        	token = cmdScanner.next(); // <flow>
         	Flow flow = ParseUtils.parseFLOW(token);
         	
-        	if (cmdScanner.hasNext())
+        	if (cmdScanner.hasNext()) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
+        	cmdScanner.close();
         	
         	return new CommandCreationalDefineBoomMale(tid, length, diameter, flow);
         }
@@ -598,10 +722,11 @@ public class TemplateParser extends Parser {
         }
 	}
 
+	
 	public CommandCreationalDefineBoomFemale createCommand_DEFINE_BOOM_FEMALE(String cmd) throws ParseException {
 		
 		// DEFINE BOOM FEMALE <tid> LENGTH <distance> DIAMETER <distance> ELEVATION <elevation>
-		// FLOW <weight>
+		// FLOW <flow>
 		
         Scanner cmdScanner = new Scanner(cmd);
         String token = "";
@@ -610,42 +735,55 @@ public class TemplateParser extends Parser {
         	token = cmdScanner.next(); // DEFINE
         	token += " " + cmdScanner.next(); // BOOM
         	token += " " + cmdScanner.next(); // FEMALE
-        	if (!token.equalsIgnoreCase("DEFINE BOOM FEMALE"))
+        	if (!token.equalsIgnoreCase("DEFINE BOOM FEMALE")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <tid>
         	Identifier tid = ParseUtils.parseID(token);
         	
         	token = cmdScanner.next(); // LENGTH
-        	if (!token.equalsIgnoreCase("LENGTH"))
+        	if (!token.equalsIgnoreCase("LENGTH")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <distance>
         	Distance length = ParseUtils.parseDISTANCE(token);
         	
         	token = cmdScanner.next(); // DIAMETER
-        	if (!token.equalsIgnoreCase("DIAMETER"))
+        	if (!token.equalsIgnoreCase("DIAMETER")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <distance>
         	Distance diameter = ParseUtils.parseDISTANCE(token);
         	
         	token = cmdScanner.next(); // ELEVATION
-        	if (!token.equalsIgnoreCase("ELEVATION"))
+        	if (!token.equalsIgnoreCase("ELEVATION")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <elevation>
         	AttitudePitch elevation = ParseUtils.parseELEVATION(token);
         	
         	token = cmdScanner.next(); // FLOW
-        	if (!token.equalsIgnoreCase("FLOW"))
+        	if (!token.equalsIgnoreCase("FLOW")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <weight>
         	Flow flow = ParseUtils.parseFLOW(token);        	
         	
-        	if (cmdScanner.hasNext())
+        	if (cmdScanner.hasNext()) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
+        	cmdScanner.close();
         	
         	return new CommandCreationalDefineBoomFemale(tid, length, diameter, elevation, flow);
         }
@@ -653,6 +791,7 @@ public class TemplateParser extends Parser {
         	throw new ParseException();
         }
 	}
+	
 	
 	public CommandCreationalDefineBarrier createCommand_DEFINE_BARRIER(String cmd) throws ParseException {
 		
@@ -663,42 +802,55 @@ public class TemplateParser extends Parser {
         try {
         	token = cmdScanner.next(); // DEFINE
         	token += " " + cmdScanner.next(); // BARRIER
-        	if (!token.equalsIgnoreCase("DEFINE BARRIER"))
+        	if (!token.equalsIgnoreCase("DEFINE BARRIER")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <tid>
         	Identifier tid = ParseUtils.parseID(token);
         	
         	token = cmdScanner.next(); // ORIGIN
-        	if (!token.equalsIgnoreCase("ORIGIN"))
+        	if (!token.equalsIgnoreCase("ORIGIN")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <origin>
         	CoordinateCartesianRelative origin = ParseUtils.parseORIGIN(token);
         	
         	token = cmdScanner.next(); // AZIMUTH
-        	if (!token.equalsIgnoreCase("AZIMUTH"))
+        	if (!token.equalsIgnoreCase("AZIMUTH")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <azimuth>
         	AngleNavigational azimuth = ParseUtils.parseAZIMUTH(token);
         	
         	token = cmdScanner.next(); // WIDTH
-        	if (!token.equalsIgnoreCase("WIDTH"))
+        	if (!token.equalsIgnoreCase("WIDTH")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <distance>
         	Distance width = ParseUtils.parseDISTANCE(token);
         	
         	token = cmdScanner.next(); // TIME
-        	if (!token.equalsIgnoreCase("TIME"))
+        	if (!token.equalsIgnoreCase("TIME")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <time>
         	Time time = ParseUtils.parseTIME(token);
         	
-        	if (cmdScanner.hasNext())
+        	if (cmdScanner.hasNext()) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
+        	cmdScanner.close();
         	
         	return new CommandCreationalDefineBarrier(tid, origin, azimuth, width, time);
         }
@@ -707,7 +859,8 @@ public class TemplateParser extends Parser {
         }
 	}
 	
-    public CommandCreationalShowTemplate createCommand_SHOW_TEMPLATE(String cmd) throws ParseException {
+    
+	public CommandCreationalShowTemplate createCommand_SHOW_TEMPLATE(String cmd) throws ParseException {
 		
     	// SHOW TEMPLATE <tid>
     	
@@ -717,14 +870,19 @@ public class TemplateParser extends Parser {
         try {
         	token = cmdScanner.next(); // SHOW
         	token += " " + cmdScanner.next(); // TEMPLATE
-        	if (!token.equalsIgnoreCase("SHOW TEMPLATE"))
+        	if (!token.equalsIgnoreCase("SHOW TEMPLATE")) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
         	
         	token = cmdScanner.next(); // <tid>
         	Identifier tid = ParseUtils.parseID(token);
         	
-        	if (cmdScanner.hasNext())
+        	if (cmdScanner.hasNext()) {
+        		cmdScanner.close();
         		throw new ParseException();
+        	}
+        	cmdScanner.close();
         	
         	return new CommandCreationalShowTemplate(tid);
         }
