@@ -31,19 +31,19 @@ public class MiscParser extends Parser {
         if (token.equalsIgnoreCase("@clock")) {
             
             if ( !cmdScanner.hasNext()) {
-                theCommand = miscellaneousCommandShowClock(token);
+                theCommand = miscellaneousCommandShowClock(cmd);
                 this.actionSet.getActionMisc().submit((CommandMiscDoShowClock) theCommand);
             } else if (cmdScanner.hasNextDouble()) {
-                theCommand = miscellaneousCommandSetClockRate(token);
+                theCommand = miscellaneousCommandSetClockRate(cmd);
                 this.actionSet.getActionMisc().submit((CommandMiscDoShowClock) theCommand);
             } else {
                 token = cmdScanner.next();
                 
                 if (token.equalsIgnoreCase("pause") || token.equalsIgnoreCase("resume")) {
-                    theCommand = miscellaneousCommandSetClockRunning(token);
+                    theCommand = miscellaneousCommandSetClockRunning(cmd);
                     this.actionSet.getActionMisc().submit((CommandMiscDoSetClockRunning) theCommand);
                 } else if (token.equalsIgnoreCase("update")) {
-                    theCommand = miscellaneousCommandUpdateClock(token);
+                    theCommand = miscellaneousCommandUpdateClock(cmd);
                     this.actionSet.getActionMisc().submit((CommandMiscDoClockUpdate) theCommand);
                 } else {
                     cmdScanner.close();
@@ -52,10 +52,10 @@ public class MiscParser extends Parser {
             }//end else
             
         } else if (token.equalsIgnoreCase("@run")) {
-            theCommand = miscellaneousCommandRun(token);
+            theCommand = miscellaneousCommandRun(cmd);
             this.actionSet.getActionMisc().submit((CommandMiscDoRun) theCommand);
         } else if (token.equalsIgnoreCase("@wait")) {
-            theCommand = miscellaneousCommandWait(token);
+            theCommand = miscellaneousCommandWait(cmd);
             this.actionSet.getActionMisc().submit((CommandMiscDoWait) theCommand);
         } else {
             cmdScanner.close();

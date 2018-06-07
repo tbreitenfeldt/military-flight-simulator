@@ -455,6 +455,7 @@ public class AgentParser extends Parser {
                         throw new ParseException("Invalid create fighter command, expects \"with\" in overrides");
                     }//end if
                     
+
                     value = cmdScanner.next();
                     
                     parameters.add(new ParameterAssignment(name, value));
