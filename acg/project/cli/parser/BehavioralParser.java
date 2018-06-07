@@ -64,6 +64,10 @@ public class BehavioralParser extends Parser {
                 else if(token.equalsIgnoreCase("fuel")) {
                 	this.actionSet.getActionBehavioral().submit(new CommandBehavioralDoAsk(id, E_Parameter.valueOf("FUEL")));
                 }
+                else {
+                    cmdScanner.close();
+                    throw new ParseException("Invalid command");
+                }
             } 
             else if (token.equalsIgnoreCase("catapult")) {
                 token = cmdScanner.next();// launch
@@ -76,7 +80,19 @@ public class BehavioralParser extends Parser {
                             Speed theSpeed = ParseUtils.parseSPEED(token);
                             this.actionSet.getActionBehavioral().submit(new CommandBehavioralDoCatapult(id, theSpeed));
                         }
+                        else {
+                            cmdScanner.close();
+                            throw new ParseException("Invalid command");
+                        }
                     }
+                    else {
+                        cmdScanner.close();
+                        throw new ParseException("Invalid command");
+                    }
+                }
+                else {
+                    cmdScanner.close();
+                    throw new ParseException("Invalid command");
                 }
             }
             else if (token.equalsIgnoreCase("set")) {
@@ -97,6 +113,10 @@ public class BehavioralParser extends Parser {
                 		this.actionSet.getActionBehavioral().submit(new CommandBehavioralDoSetHeading(id, theCourse, E_Direction.SHORTEST));
                 	}
                 }
+                else {
+                    cmdScanner.close();
+                    throw new ParseException("Invalid command");
+                }
             }//end else
             else if (token.equalsIgnoreCase("boom")) {
                 token = cmdScanner.next();// extend or retract
@@ -106,6 +126,14 @@ public class BehavioralParser extends Parser {
                 else if(token.equalsIgnoreCase("retract")) {
                 	this.actionSet.getActionBehavioral().submit(new CommandBehavioralDoBoom(id, false));
                 }
+                else {
+                    cmdScanner.close();
+                    throw new ParseException("Invalid command");
+                }
+            }
+            else {
+                cmdScanner.close();
+                throw new ParseException("Invalid command");
             }//end else
         } 
         else if (token.equalsIgnoreCase("@do")) {
@@ -132,7 +160,15 @@ public class BehavioralParser extends Parser {
                     				Speed thespeed = ParseUtils.parseSPEED(token);
                     				this.actionSet.getActionBehavioral().submit(new CommandBehavioralDoForceAll(id, coords, alt, theCourse, thespeed));
                     			}
+                    			else {
+                    	            cmdScanner.close();
+                    	            throw new ParseException("Invalid command");
+                    	        }
                     		}
+                    		else {
+                                cmdScanner.close();
+                                throw new ParseException("Invalid command");
+                            }
                     	}
                     	else if(token.equalsIgnoreCase("heading")) {
                     		token = cmdScanner.next();//course
@@ -142,8 +178,12 @@ public class BehavioralParser extends Parser {
                 				token = cmdScanner.next();//speed
                 				Speed thespeed = ParseUtils.parseSPEED(token);
                 				this.actionSet.getActionBehavioral().submit(new CommandBehavioralDoForceAll(id, coords, theCourse, thespeed));
+                			}
                     	}
-                    }
+                    	else {
+                            cmdScanner.close();
+                            throw new ParseException("Invalid command");
+                        }
                     }
                     else {
                     	this.actionSet.getActionBehavioral().submit(new CommandBehavioralDoForceCoordinates(id, coords));
@@ -154,7 +194,19 @@ public class BehavioralParser extends Parser {
                     AngleNavigational theCourse = ParseUtils.parseCOURSE(token);
                     this.actionSet.getActionBehavioral().submit(new CommandBehavioralDoForceHeading(id, theCourse));
                 }
+                else {
+                    cmdScanner.close();
+                    throw new ParseException("Invalid command");
+                }
             }
+            else {
+                cmdScanner.close();
+                throw new ParseException("Invalid command");
+            }
+        }
+        else {
+            cmdScanner.close();
+            throw new ParseException("Invalid command");
         }//end else
         
         cmdScanner.close();
