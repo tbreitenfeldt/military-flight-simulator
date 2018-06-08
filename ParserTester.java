@@ -12,7 +12,8 @@ public class ParserTester {
         
         // Test a complete command
         //testParseCommand("DeFINE cat1 OrIGIN 1:1 AZIMUTH 10 WIDTH 5 LIMIT WEIGHT 6 SPEED 7 MISS 80");
-        testParseCommand("create fighter  aFighter from aFighter with ols aOLS boom  aBoom tailhook aTailhook tanks tank1 tank2 tank3 overriding arg1.arg1 with \"myArg1\" arg2.arg2 with \"myArg2\" arg3.arg3 with \"myArg3\" at coordinates 20*30\'2.3\"/170*15\'15\" altitude 2000 heading 090 speed 424");
+        /*testParseCommand("create fighter  aFighter from aFighter with ols aOLS boom  aBoom tailhook aTailhook tanks tank1 tank2 tank3 overriding arg1.arg1 with \"myArg1\" arg2.arg2 with \"myArg2\" arg3.arg3 with \"myArg3\" at coordinates 20*30\'2.3\"/170*15\'15\" altitude 2000 heading 090 speed 424");*/
+testParseCommand("@run 'run.bat'");
 
     }
     

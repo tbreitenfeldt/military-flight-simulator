@@ -381,8 +381,14 @@ public class ParseUtils {
     
     public static String parseSTRING(String token) throws ParseException {
         
-        if (token instanceof String)
-            return new String(token);
+    	if (token.charAt(0) == '\'' && token.charAt(token.length()-1) == '\'') {
+    		if (token.length() <= 2)
+    			throw new ParseException();
+    		
+    		token = token.substring(1, token.length()-1);
+    		
+    		return token;
+    	}
         
         else
             throw new ParseException();
@@ -420,6 +426,29 @@ public class ParseUtils {
         }
         
         return new Weight(weight);
+    }//end method
+    
+    public static String parseSTRING(Scanner s) throws ParseException {
+    
+        String token = s.next();
+        String result = "";
+        
+        if ( !token.startsWith("\'")) {
+            s.close();
+            throw new ParseException("missing open quote");
+        }//end if
+        
+        while( s.hasNext() && !token.endsWith("\'")) {
+            token = s.next();
+            result += " " + token;
+        }//end while loop
+        
+        //asumes that there is a close quote, if there isn't one, then it will have unexpected behavior 
+        
+        result = result.trim();
+        result = result.replaceAll("\'", "");
+        return result;
+    
     }//end method
     
 }//end class
