@@ -46,8 +46,16 @@ public class StructuralParser extends Parser {
             			}
             			this.actionSet.getActionStructural().submit(new CommandStructuralPopulateCarrier(carrierId, idList));
             		}
+            		else {
+                        cmdScanner.close();
+                        throw new ParseException("Invalid command");
+                    }//end else
             	}
-            }//end if
+            	else {
+                    cmdScanner.close();
+                    throw new ParseException("Invalid command");
+                }//end else
+            }
             else if (token.equalsIgnoreCase("world")) {
             	token = cmdScanner.next();//with
             	
@@ -59,12 +67,24 @@ public class StructuralParser extends Parser {
             	    }
             	    this.actionSet.getActionStructural().submit(new CommandStructuralPopulateWorld(idList));
             	}
-            }//end if
-        }//end if
+            	else {
+                    cmdScanner.close();
+                    throw new ParseException("Invalid command");
+                }//end else
+            }
+            else {
+                cmdScanner.close();
+                throw new ParseException("Invalid command");
+            }
+        }
         else if (token.equalsIgnoreCase("commit")) {
         	this.actionSet.getActionStructural().submit(new CommandStructuralCommit());
-        }//end if
-  
+        }
+        else {
+            cmdScanner.close();
+            throw new ParseException("Invalid command");
+        }//end else
+        
         cmdScanner.close();
     }
 	
