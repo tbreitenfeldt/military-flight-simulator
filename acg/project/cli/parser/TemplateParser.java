@@ -390,7 +390,7 @@ public class TemplateParser extends Parser {
         	Speed dInc = ParseUtils.parseSPEED(token);
         	
         	token = cmdScanner.next(); // DECREASE
-        	if (!token.equalsIgnoreCase("INCREASE")) {
+        	if (!token.equalsIgnoreCase("DECREASE")) {
         		cmdScanner.close();
         		throw new ParseException();
         	}
@@ -412,14 +412,28 @@ public class TemplateParser extends Parser {
         		cmdScanner.close();
         		throw new ParseException();
         	}
-        	
-        	token = cmdScanner.next(); // <string>
-        	String layout = ParseUtils.parseSTRING(token);
-        	
-        	if (cmdScanner.hasNext()) {
+
+        	String layout = "";
+        	try {
+        		int firstQuote = cmd.indexOf("'");
+        		int secondQuote = cmd.indexOf("'", firstQuote + 1);
+        		
+        		layout = cmd.substring(firstQuote + 1, secondQuote);
+        		token = cmd.substring(secondQuote+1);
+        		
+        		cmdScanner.close();
+        		cmdScanner = new Scanner(token);
+        		
+        		if (cmdScanner.hasNext()) {
+        			cmdScanner.close();
+        			throw new ParseException();
+        		}
+        	}
+        	catch (Exception e) {
         		cmdScanner.close();
         		throw new ParseException();
         	}
+
         	cmdScanner.close();
         	
         	return new CommandCreationalDefineCarrier(tid, speedMax, dInc, dDec, turn, layout);
