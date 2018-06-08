@@ -40,10 +40,10 @@ public class MiscParser extends Parser {
                 token = cmdScanner.next();
                 
                 if (token.equalsIgnoreCase("pause") || token.equalsIgnoreCase("resume")) {
-                    theCommand = miscellaneousCommandSetClockRunning(token);
+                    theCommand = miscellaneousCommandSetClockRunning(cmd);
                     this.actionSet.getActionMisc().submit((CommandMiscDoSetClockRunning) theCommand);
                 } else if (token.equalsIgnoreCase("update")) {
-                    theCommand = miscellaneousCommandUpdateClock(token);
+                    theCommand = miscellaneousCommandUpdateClock(cmd);
                     this.actionSet.getActionMisc().submit((CommandMiscDoClockUpdate) theCommand);
                 } else {
                     cmdScanner.close();
@@ -55,7 +55,7 @@ public class MiscParser extends Parser {
             theCommand = miscellaneousCommandRun(cmd);
             this.actionSet.getActionMisc().submit((CommandMiscDoRun) theCommand);
         } else if (token.equalsIgnoreCase("@wait")) {
-            theCommand = miscellaneousCommandWait(token);
+            theCommand = miscellaneousCommandWait(cmd);
             this.actionSet.getActionMisc().submit((CommandMiscDoWait) theCommand);
         } else {
             cmdScanner.close();
