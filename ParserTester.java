@@ -13,7 +13,7 @@ public class ParserTester {
         // Test a complete command
         //testParseCommand("DeFINE cat1 OrIGIN 1:1 AZIMUTH 10 WIDTH 5 LIMIT WEIGHT 6 SPEED 7 MISS 80");
 
-        testParseCommand("@run 'run.bat'");
+        testParseCommand("do aCarrier catapult launch with speed 250 ");
 
     }
     

@@ -1,3 +1,9 @@
+/**
+ * @author TJ, Coel, Richard
+ * team 6
+ * CSCD350
+ * project part 2
+*/
 
 package acg.project.cli.parser;
 
