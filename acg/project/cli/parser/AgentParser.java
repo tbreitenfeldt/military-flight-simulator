@@ -277,7 +277,7 @@ public class AgentParser extends Parser {
             token = cmdScanner.next(); //create 
             token += " " + cmdScanner.next();  //tanker
             
-            if (token.equalsIgnoreCase("create tanker")) {
+            if ( !token.equalsIgnoreCase("create tanker")) {
                 cmdScanner.close();
                 throw new ParseException("Invalid create tanker command");
             }//end if
@@ -334,7 +334,7 @@ public class AgentParser extends Parser {
             token = cmdScanner.next();  //course
             heading = ParseUtils.parseCOURSE(token);
             
-            if ( !token.equalsIgnoreCase("speed")) {
+            if ( !cmdScanner.next().equalsIgnoreCase("speed")) {
                 cmdScanner.close();
                 throw new ParseException("Invalid create tanker command, expects \"speed\"");
             }//end if 
