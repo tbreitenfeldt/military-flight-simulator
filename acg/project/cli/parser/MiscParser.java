@@ -34,8 +34,8 @@ public class MiscParser extends Parser {
                 theCommand = miscellaneousCommandShowClock(token);
                 this.actionSet.getActionMisc().submit((CommandMiscDoShowClock) theCommand);
             } else if (cmdScanner.hasNextDouble()) {
-                theCommand = miscellaneousCommandSetClockRate(token);
-                this.actionSet.getActionMisc().submit((CommandMiscDoShowClock) theCommand);
+                theCommand = miscellaneousCommandSetClockRate(cmd);
+                this.actionSet.getActionMisc().submit((CommandMiscDoSetClockRate) theCommand);
             } else {
                 token = cmdScanner.next();
                 
@@ -182,7 +182,7 @@ public class MiscParser extends Parser {
     }//end method
     
     private CommandMiscDoRun miscellaneousCommandRun(String cmd) throws ParseException {
-        /*
+        //
         String filename = "";
         Scanner cmdScanner = new Scanner(cmd);
         
@@ -212,9 +212,9 @@ public class MiscParser extends Parser {
         cmdScanner.close();
         
         return new CommandMiscDoRun(filename);
-        */
+        //
         
-        
+        /*
         String filename = "";
         Scanner cmdScanner = new Scanner(cmd);
         
@@ -236,7 +236,7 @@ public class MiscParser extends Parser {
         cmdScanner.close();
         
         return new CommandMiscDoRun(filename);
-        
+        */
     }//end method
     
     private CommandMiscDoWait miscellaneousCommandWait(String cmd) throws ParseException {
