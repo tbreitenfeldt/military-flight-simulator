@@ -379,7 +379,7 @@ public class AgentParser extends Parser {
             token = cmdScanner.next(); //create 
             token += " " + cmdScanner.next();  //Fighter
             
-            if (token.equalsIgnoreCase("create fighter")) {
+            if ( !token.equalsIgnoreCase("create fighter")) {
                 cmdScanner.close();
                 throw new ParseException("Invalid create fighter command");
             }//end if
@@ -424,7 +424,9 @@ public class AgentParser extends Parser {
             token = cmdScanner.next();  //tailhook
             idAgentTailhook = ParseUtils.parseID(token);
             
-            if (cmdScanner.next().equalsIgnoreCase("tanks")) {
+            token = cmdScanner.next();  //could be tanks, overriding, or at
+            
+            if (token.equalsIgnoreCase("tanks")) {
                 token = cmdScanner.next();
                 
                 //stop adding tank ids to the list if the next token is overriding, "at", or the last in the stanner
@@ -454,7 +456,6 @@ public class AgentParser extends Parser {
                         cmdScanner.close();
                         throw new ParseException("Invalid create fighter command, expects \"with\" in overrides");
                     }//end if
-                    
                     
                     value = ParseUtils.parseSTRING(cmdScanner);
                     
@@ -498,7 +499,7 @@ public class AgentParser extends Parser {
                 token = cmdScanner.next();  //course
                 heading = ParseUtils.parseCOURSE(token);
                 
-                if ( !token.equalsIgnoreCase("speed")) {
+                if ( !cmdScanner.next().equalsIgnoreCase("speed")) {
                     cmdScanner.close();
                     throw new ParseException("Invalid create fighter command, expects \"speed\"");
                 }//end if 
