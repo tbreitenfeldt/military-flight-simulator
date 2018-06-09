@@ -13,7 +13,7 @@ public class ParserTester {
         // Test a complete command
         //testParseCommand("DeFINE cat1 OrIGIN 1:1 AZIMUTH 10 WIDTH 5 LIMIT WEIGHT 6 SPEED 7 MISS 80");
 
-        testParseCommand("create tanker aTanker from tTanker with boom aBoom at coordinates 45*23'40\"/50*29'2.4\" altitude 2000 heading 090 speed 700 ");
+        testParseCommand("ols_xmt aOLS from tOLS");
 
     }
     

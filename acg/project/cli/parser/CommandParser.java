@@ -58,17 +58,13 @@ public class CommandParser {
                 cmdScanner.close();
                 cmdScanner = null;
                 
-                try {
-                    parser = parsers.get(firstWord); // manually catch the hashtable throwing an exception if the command doesnt exist and
-                    // throw it ourselves because it is an invalid command
-                }
-                catch (Exception e) {
-                    throw new ParseException("Invalid command");
-                }
+                parser = parsers.get(firstWord);
                 
-                if (parser != null)
+                if (parser != null) {
                     parser.parseCommand(this.cmd);
-                
+                } else {
+                    throw new ParseException("Invalid command");        
+                }
             }
             
             if (cmdScanner != null) {
