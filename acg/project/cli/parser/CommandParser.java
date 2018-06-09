@@ -61,7 +61,7 @@ public class CommandParser {
                 parser = parsers.get(firstWord);
                 
                 if (parser != null) {
-                    parser.parseCommand(this.cmd);
+                    parser.parseCommand(command);
                 } else {
                     throw new ParseException("Invalid command");        
                 }

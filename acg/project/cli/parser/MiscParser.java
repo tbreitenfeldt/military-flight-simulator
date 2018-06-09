@@ -31,7 +31,7 @@ public class MiscParser extends Parser {
         if (token.equalsIgnoreCase("@clock")) {
             
             if ( !cmdScanner.hasNext()) {
-                theCommand = miscellaneousCommandShowClock(token);
+                theCommand = miscellaneousCommandShowClock(cmd);
                 this.actionSet.getActionMisc().submit((CommandMiscDoShowClock) theCommand);
             } else if (cmdScanner.hasNextDouble()) {
                 theCommand = miscellaneousCommandSetClockRate(cmd);
@@ -116,7 +116,6 @@ public class MiscParser extends Parser {
         Scanner cmdScanner = new Scanner(cmd);
         
         try {
-            token = cmdScanner.next();
             
             if ( !cmdScanner.next().equalsIgnoreCase("@clock")) {
                 cmdScanner.close();
