@@ -424,7 +424,9 @@ public class AgentParser extends Parser {
             token = cmdScanner.next();  //tailhook
             idAgentTailhook = ParseUtils.parseID(token);
             
-            token = cmdScanner.next();  //could be tanks, overriding, or at
+            if (cmdScanner.hasNext()) {
+                token = cmdScanner.next();  //could be tanks, overriding, or at
+            }//end if
             
             if (token.equalsIgnoreCase("tanks")) {
                 token = cmdScanner.next();
@@ -434,7 +436,10 @@ public class AgentParser extends Parser {
                     Identifier temp = ParseUtils.parseID(token );
                     
                     idAgentTanks.add(temp);
-                    token = cmdScanner.next();
+                    
+                    if (cmdScanner.hasNext()) {
+                        token = cmdScanner.next();
+                    }//end if
                 }//end while loop
                 
                 //check if the argument tanks was given, but no tank ids 
@@ -460,7 +465,10 @@ public class AgentParser extends Parser {
                     value = ParseUtils.parseSTRING(cmdScanner);
                     
                     parameters.add(new ParameterAssignment(name, value));
-                    token = cmdScanner.next();
+                    
+                    if (cmdScanner.hasNext()) {
+                        token = cmdScanner.next();
+                    }//end if
                 }//end while loop
                 
                 if (parameters.isEmpty()) {
