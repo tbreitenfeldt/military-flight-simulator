@@ -82,7 +82,7 @@ public class AgentParser extends Parser {
             token = cmdScanner.next(); //create 
             token += " " + cmdScanner.next();  //carrier
             
-            if (token.equalsIgnoreCase("create carrier")) {
+            if ( !token.equalsIgnoreCase("create carrier")) {
                 cmdScanner.close();
                 throw new ParseException("Invalid create carrier command");
             }//end if
@@ -155,7 +155,7 @@ public class AgentParser extends Parser {
             token = cmdScanner.next();
             heading = ParseUtils.parseCOURSE(token);
             
-            if ( !token.equalsIgnoreCase("speed")) {
+            if ( !cmdScanner.next().equalsIgnoreCase("speed")) {
                 cmdScanner.close();
                 throw new ParseException("Invalid create carrier command, expects \"speed\"");
             }//end if 

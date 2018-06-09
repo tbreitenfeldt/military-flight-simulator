@@ -438,10 +438,16 @@ public class ParseUtils {
             throw new ParseException("missing open quote");
         }//end if
         
+        result += token;
+        
         while( s.hasNext() && !token.endsWith("\'")) {
             token = s.next();
             result += " " + token;
         }//end while loop
+        
+        if (!token.endsWith("\'")) {
+        	throw new ParseException();
+        }
         
         //asumes that there is a close quote, if there isn't one, then it will have unexpected behavior 
         
